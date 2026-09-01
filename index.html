@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ulangan Harian - Sistem Komputer</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- html2canvas for screenshot -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #673ab7;
+            --primary-light: #f0ebf8;
+            --bg-color: #f0f4f9;
+            --text-main: #202124;
+            --text-secondary: #5f6368;
+            --border-color: #dadce0;
+            --card-bg: #ffffff;
+            --success: #1e8e3e;
+            --danger: #d93025;
+            --warning: #f29900;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 20px 15px;
+            /* Anti copy-paste style */
+            user-select: none; 
+            -webkit-user-select: none;
+        }
+        
+        /* --- KOP SURAT STYLING --- */
+        .kop-surat {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 10px 5px 10px;
+            gap: 20px;
+            color: #000;
+        }
+        .kop-logo {
+            width: 95px;
+            height: auto;
+            flex-shrink: 0;
+        }
+        .kop-text {
+            text-align: center;
+            flex-grow: 1;
+        }
+        .kop-yayasan {
+            font-size: 15px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+        .kop-sekolah {
+            font-size: 26px;
+            font-weight: 900;
+            font-family: 'Arial Black', Impact, sans-serif;
+            margin: 2px 0;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+        }
+        .kop-npsn {
+            font-size: 13px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+        .kop-akreditasi {
+            font-size: 15px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            margin: 2px 0;
+        }
+        .kop-alamat {
+            font-size: 13px;
+            line-height: 1.3;
+            font-family: Arial, sans-serif;
+        }
+        .kop-garis {
+            border: none;
+            border-top: 4px solid #000;
+            border-bottom: 1px solid #000;
+            height: 3px;
+            background: transparent;
+            margin: 5px 0 20px 0;
+            width: 100%;
+        }
+
+        /* Layout Grid for Sidebar + Main Content */
+        .layout-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+        
+        /* Sidebar Styling */
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            width: 280px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            max-height: 90vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .sidebar h3 {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 16px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .grid-nav {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+        .nav-box {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f3f4;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.2s ease;
+            border: 1px solid transparent;
+        }
+        .nav-box:hover {
+            border-color: var(--primary);
+        }
+        .nav-box.answered {
+            background: var(--success);
+            color: white;
+        }
+        .sidebar-toggle-btn {
+            display: none;
+            width: 100%;
+            margin-bottom: 15px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: bold;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 768px;
+            flex-grow: 1;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+            scroll-margin-top: 80px; 
+        }
+        .card-header {
+            border-radius: 8px;
+            padding: 24px;
+            background: var(--card-bg);
+            margin-bottom: 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        h1.title {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 28px;
+        }
+        p.subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-family: 'Google Sans', sans-serif;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .required::after {
+            content: " *";
+            color: var(--danger);
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            background-color: #f8f9fa;
+            border-radius: 4px 4px 0 0;
+            transition: border-bottom 0.2s;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            outline: none;
+            border-bottom: 2px solid var(--primary);
+            background-color: #e8f0fe;
+        }
+        .question-title {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .option-label:hover {
+            background: #f1f3f4;
+        }
+        .option-label input {
+            margin-right: 12px;
+            transform: scale(1.2);
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            padding-bottom: 40px;
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 24px;
+            font-family: 'Google Sans', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #512da8;
+        }
+        button:disabled {
+            background-color: #b39ddb;
+            cursor: not-allowed;
+        }
+        button.btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--border-color);
+        }
+        button.btn-outline:hover {
+            background-color: #f8f9fa;
+        }
+        
+        /* Progress Bar */
+        .progress-wrapper {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            padding: 10px 0;
+            z-index: 100;
+        }
+        .progress-bar {
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        /* Result Card styling */
+        #result-section {
+            display: none;
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+        }
+        .result-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 2px solid var(--primary);
+            position: relative;
+            background-image: radial-gradient(circle at 100% 100%, #f0ebf8 0%, transparent 50%), radial-gradient(circle at 0% 0%, #e8f0fe 0%, transparent 50%);
+        }
+        img.result-logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 16px;
+        }
+        .result-title {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 24px;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
+        .student-info {
+            text-align: left;
+            margin-bottom: 24px;
+            background: rgba(255,255,255,0.8);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+        }
+        .student-info p {
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .score-box {
+            background: var(--primary);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 24px;
+            min-width: 200px;
+        }
+        .score-box h2 {
+            font-size: 64px;
+            margin: 0;
+            line-height: 1;
+        }
+        .score-box span {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .details-box {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        .details-box div {
+            text-align: center;
+        }
+        .details-box strong {
+            display: block;
+            font-size: 20px;
+            color: var(--primary);
+        }
+        .stamp {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            border: 3px solid var(--danger);
+            color: var(--danger);
+            font-weight: bold;
+            font-size: 24px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transform: rotate(-15deg);
+            opacity: 0.8;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80px;
+            color: rgba(0,0,0,0.03);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            font-weight: bold;
+        }
+
+        .page-section {
+            display: none;
+        }
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Toast notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 4.5s;
+        }
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+        
+        .badge-topic {
+            background: #e8f0fe;
+            color: #1a73e8;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        
+        .complex-badge {
+            background: #fce8e6;
+            color: #d93025;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 8px;
+            display: inline-block;
+        }
+        
+        /* Modal Custom Submission */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-card {
+            background: #fff;
+            width: 90%;
+            max-width: 450px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .modal-card h2 {
+            font-family: 'Google Sans', sans-serif;
+            margin-bottom: 12px;
+            font-size: 22px;
+        }
+        .modal-card p {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+        .unanswered-box {
+            background: #fff3e0;
+            border: 1px solid #ffcc80;
+            color: #e65100;
+            padding: 12px;
+            border-radius: 6px;
+            max-height: 120px;
+            overflow-y: auto;
+            font-size: 14px;
+            margin-bottom: 24px;
+            text-align: left;
+            display: none;
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .modal-actions button {
+            width: 50%;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 800px) {
+            .layout-wrapper { flex-direction: column; }
+            .sidebar { 
+                width: 100%; 
+                position: static; 
+                max-height: 250px; 
+                display: none; 
+            }
+            .sidebar.show { display: block; }
+            .sidebar-toggle-btn { display: block; }
+            .stamp {
+                font-size: 18px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+        @media (max-width: 600px) {
+            .kop-surat {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .kop-sekolah {
+                font-size: 20px;
+            }
+            .kop-yayasan {
+                font-size: 12px;
+            }
+            .kop-alamat {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="layout-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <h3>Navigasi Soal</h3>
+        <div class="grid-nav" id="nav-grid">
+            <!-- Dibuat otomatis via JS -->
+        </div>
+    </aside>
+
+    <!-- Main Container -->
+    <div class="container main-content" id="main-content">
+        <button type="button" class="sidebar-toggle-btn" onclick="toggleSidebar()">Lihat Peta Soal / Navigasi</button>
+        
+        <div class="progress-wrapper" id="progress-wrapper">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-text" id="progress-text">Halaman 1 dari 6</div>
+        </div>
+
+        <form id="quizForm">
+            <!-- PAGE 1: Data Diri & Kop Surat Resmi -->
+            <div class="page-section active" id="page-0">
+                <div class="card-header" style="border-top: none; background: #fff;">
+                    <div class="kop-surat">
+                        <img src="logo.png" alt="Logo SMK Choiriyah" class="kop-logo">
+                        <div class="kop-text">
+                            <div class="kop-yayasan">YAYASAN DAANIYATUL CHOIRIYAH LUMAJANG</div>
+                            <div class="kop-sekolah">SMK CHOIRIYAH LUMAJANG</div>
+                            <div class="kop-npsn">NSS: 342052110029 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NPSN: 69761820</div>
+                            <div class="kop-akreditasi">TERAKREDITASI B</div>
+                            <div class="kop-alamat">
+                                Jl. Kalimas RT:01 RW:10 Rogotrunan Kecamatan Lumajang<br>
+                                Kabupaten Lumajang 67315 &ndash; Telp. &#9742; (0334) 8797318/081237666007
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Garis Ganda Kop Surat -->
+                    <hr class="kop-garis">
+                    
+                    <h1 class="title" style="text-align: center; margin-bottom: 15px;">Ulangan Harian</h1>
+                    <p class="subtitle"><strong>Mata Pelajaran:</strong> Informatika - Sistem Komputer</p>
+                    <p class="subtitle"><strong>Guru Pengampu:</strong> Gusty Lazuardi S.T., Gr.</p>
+                    <hr style="margin: 12px 0;">
+                    <p style="font-size: 14px; background: #e8f0fe; padding: 10px; border-radius: 6px; color: #1a73e8;">
+                        <strong>Petunjuk:</strong> Terdapat 100 soal dalam ulangan ini. Soal 1-50 adalah pilihan ganda tunggal (pilih 1 jawaban). Soal 51-100 adalah pilihan ganda kompleks (pilih 2 atau lebih jawaban yang benar). Isilah identitas Anda sebelum memulai.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="form-group">
+                        <label class="required" for="nama">Nama Lengkap</label>
+                        <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap Anda" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="kelas">Kelas</label>
+                        <select id="kelas" name="kelas" required>
+                            <option value="" disabled selected>Pilih Kelas</option>
+                            <option value="X TKJ 1">X TKJ</option>
+                            <option value="X BD">X BD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="absen">Nomor Absen</label>
+                        <input type="number" id="absen" name="absen" min="1" max="40" placeholder="Contoh: 15" required autocomplete="off">
+                    </div>
+                </div>
+                
+                <div class="btn-container" style="justify-content: flex-end;">
+                    <button type="button" onclick="nextPage()">Berikutnya</button>
+                </div>
+            </div>
+
+            <!-- Pages for Questions will be injected here via JS -->
+            <div id="questions-container"></div>
+        </form>
+
+        <!-- Result Section -->
+        <div id="result-section">
+            <!-- Area ini yang akan discreenshot oleh sistem -->
+            <div class="result-card" id="result-card-downloadable">
+                <div class="watermark">SMK CHOIRIYAH</div>
+                <img src="logo.png" alt="Logo SMK Choiriyah" class="result-logo">
+                <h1 class="result-title">LEMBAR HASIL ULANGAN HARIAN</h1>
+                
+                <div class="student-info">
+                    <p><strong>Nama:</strong> <span id="res-nama"></span></p>
+                    <p><strong>Kelas / No:</strong> <span id="res-kelas"></span> / <span id="res-absen"></span></p>
+                    <p><strong>Mata Pelajaran:</strong> Informatika - Sistem Komputer</p>
+                    <p><strong>Waktu Selesai:</strong> <span id="res-waktu"></span></p>
+                </div>
+
+                <div class="score-box">
+                    <h2 id="res-score">0</h2>
+                    <span>NILAI AKHIR / 100</span>
+                </div>
+
+                <div class="details-box">
+                    <div>
+                        <span>PG Tunggal Benar</span>
+                        <strong id="res-pg1">0 / 50</strong>
+                    </div>
+                    <div>
+                        <span>PG Kompleks Poin</span>
+                        <strong id="res-pg2">0 / 50</strong>
+                    </div>
+                </div>
+
+                <p style="font-weight:bold; font-size:18px; margin-bottom: 8px;" id="res-status"></p>
+                <p style="font-size:14px; color: var(--text-secondary);">Guru Pengampu: Gusty Lazuardi S.T., Gr.</p>
+
+                <div class="stamp" id="res-stamp">LULUS</div>
+            </div>
+
+            <div class="btn-container" style="justify-content: center; gap: 16px; margin-top: 20px;">
+                <button onclick="downloadScreenshot()">📸 Download Ulang Bukti (PNG)</button>
+                <button class="btn-outline" onclick="location.reload()">🔄 Kembali ke Awal</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Dialog Submit -->
+<div id="submitModal" class="modal-overlay">
+    <div class="modal-card">
+        <h2 id="modal-title">Konfirmasi</h2>
+        <p id="modal-desc"></p>
+        <div id="unanswered-list" class="unanswered-box"></div>
+        <div class="modal-actions">
+            <button type="button" class="btn-outline" onclick="closeModal()">Batal</button>
+            <button type="button" id="btn-force-submit" onclick="processSubmission()">Ya, Kirim</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast">Hasil telah disimpan ke galeri/perangkat Anda.</div>
+
+<script>
+/* =========================================
+   ANTI-CHEAT SYSTEM DENGAN ALARM SIRINE
+========================================= */
+// 1. Disable klik kanan
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// 2. Disable Copy Paste & Shortcut keyboard
+document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'p' || e.key === 'u' || e.key === 's')) {
+        e.preventDefault();
+        showToast("Tindakan ini tidak diizinkan selama ujian!");
+    }
+});
+
+// 3. Fungsi Generator Suara Alarm (Web Audio API)
+function playCheatAlarm() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        // Membuat suara kasar/bising (sirine)
+        oscillator.type = 'sawtooth'; 
+        oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime); // Nada tinggi
+        oscillator.frequency.linearRampToValueAtTime(400, audioCtx.currentTime + 0.5); // Turun cepat
+
+        gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5); // Durasi 1.5 detik
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 1.5);
+    } catch (e) {
+        console.log("Browser tidak mendukung Web Audio API");
+    }
+}
+
+// 4. Deteksi Pindah Tab / Tombol Home (Visibility Change)
+let cheatCount = 0;
+let quizCompleted = false;
+
+document.addEventListener("visibilitychange", () => {
+    if(quizCompleted) return; 
+    
+    const isQuizActive = document.getElementById('quizForm').style.display !== 'none';
+    
+    // Jika siswa keluar dari layar ujian
+    if (document.visibilityState === "hidden" && isQuizActive) {
+        cheatCount++;
+    }
+    
+    // Ketika siswa kembali ke layar ujian, bunyikan alarm dan tampilkan pesan
+    if (document.visibilityState === "visible" && isQuizActive && cheatCount > 0) {
+        playCheatAlarm(); // Bunyikan alarm sirine
+        
+        if(cheatCount >= 3) {
+            alert(`🚨 PERINGATAN PELANGGARAN BERAT! 🚨\n\nAnda telah keluar dari aplikasi/browser sebanyak ${cheatCount} kali.\nIni adalah batas maksimal pelanggaran!\n\nSistem akan mengirim dan mengunci jawaban Anda secara otomatis sekarang juga.`);
+            processSubmission(true); // Paksa kirim jawaban
+        } else {
+            alert(`⚠️ PERINGATAN KEAMANAN TERDETEKSI! ⚠️\n\nAnda terdeteksi menekan tombol Home, keluar dari halaman ujian, atau membuka layar lain.\n\nPeringatan ke-${cheatCount} dari maksimal 3 kali pelanggaran. Jika mencapai 3 kali, ujian akan langsung dihentikan!`);
+        }
+    }
+});
+
+
+/* =========================================
+   DATA SOAL (Single & Complex)
+========================================= */
+const singleQuestions = [{"id": 1, "topic": "Hardware", "question": "Komponen utama sistem komputer yang bertindak sebagai pusat pengendali dan pemroses seluruh instruksi data adalah...", "options": ["RAM", "Harddisk", "Central Processing Unit (CPU)", "Power Supply", "Motherboard"], "answer": 2}, {"id": 2, "topic": "Hardware", "question": "Perangkat keras masukan (input device) yang bekerja dengan memindai dokumen fisik menjadi data digital adalah...", "options": ["Plotter", "Scanner", "Printer Thermal", "Projector", "Digitizer"], "answer": 1}, {"id": 3, "topic": "Hardware", "question": "Jenis memori utama yang bersifat 'volatile' (data hilang saat listrik mati) adalah...", "options": ["ROM", "NVMe SSD", "RAM", "Flashdisk", "EEPROM"], "answer": 2}, {"id": 4, "topic": "Hardware", "question": "Media penyimpanan sekunder berbasis chip semikonduktor tanpa komponen bergerak yang menawarkan kecepatan tinggi adalah...", "options": ["HDD SATA", "Solid State Drive (SSD)", "Magnetic Tape", "Floppy Disk", "CD-ROM"], "answer": 1}, {"id": 5, "topic": "Hardware", "question": "Port pada motherboard yang secara khusus digunakan untuk memasang kartu grafis (VGA Card) modern adalah...", "options": ["PCIe x16", "PCI-X", "SATA 3", "IDE", "USB 3.0"], "answer": 0}, {"id": 6, "topic": "Hardware", "question": "Perangkat keluaran (output device) yang digunakan untuk mencetak cetak biru (blueprint) atau gambar teknis ukuran besar adalah...", "options": ["Dot Matrix Printer", "LaserJet Printer", "Plotter", "3D Printer", "Thermal Printer"], "answer": 2}, {"id": 7, "topic": "Hardware", "question": "Papan sirkuit utama yang menghubungkan seluruh komponen internal komputer satu sama lain disebut...", "options": ["Backplane", "Motherboard", "Chassis", "Expansion Bus", "Power Distribution Board"], "answer": 1}, {"id": 8, "topic": "Hardware", "question": "Perangkat keras masukan yang biasa digunakan oleh desainer grafis untuk menggambar secara presisi dengan stylus adalah...", "options": ["Touchpad", "Trackball", "Graphics Tablet (Digitizer)", "Light Pen", "Barcode Reader"], "answer": 2}, {"id": 9, "topic": "Hardware", "question": "Komponen power supply yang berfungsi merubah arus listrik AC dari stopkontak menjadi arus DC untuk motherboard adalah...", "options": ["Inverter", "Rectifier / Transformer", "Capacitor Bank", "Voltage Regulator", "Heatsink"], "answer": 1}, {"id": 10, "topic": "Hardware", "question": "Teknologi port mentransfer data, sinyal video, dan daya listrik sekaligus dalam satu kabel kecil simetris adalah...", "options": ["HDMI 2.1", "DisplayPort", "USB Type-C (Thunderbolt)", "VGA", "DVI-D"], "answer": 2}, {"id": 11, "topic": "Hardware", "question": "Memori non-volatile berbasis ROM yang digunakan untuk menyimpan instruksi awal booting dasar sistem komputer adalah...", "options": ["SRAM", "BIOS / UEFI Chip", "DRAM", "Cache L1", "VRAM"], "answer": 1}, {"id": 12, "topic": "Hardware", "question": "Perangkat keras yang berfungsi mendinginkan CPU secara langsung melalui hembusan udara atau cairan pendingin adalah...", "options": ["Thermal Paste", "Cooler CPU (Heatsink & Fan)", "Chassis Fan", "Power Supply Fan", "GPU Cooler"], "answer": 1}, {"id": 13, "topic": "Hardware", "question": "Berikut ini yang termasuk perangkat penyimpanan optik adalah...", "options": ["SD Card", "Blu-ray Disc", "Flashdrive", "Tape Drive", "External Harddisk"], "answer": 1}, {"id": 14, "topic": "Software", "question": "Sistem operasi tergolong ke dalam kelompok perangkat lunak kategori...", "options": ["Application Software", "System Software", "Utility Software", "Programming Software", "Malicious Software"], "answer": 1}, {"id": 15, "topic": "Software", "question": "Sistem operasi open-source berbasis kernel bebas yang dikembangkan oleh Linus Torvalds adalah...", "options": ["Windows 11", "macOS Sonoma", "Linux", "MS-DOS", "iOS"], "answer": 2}, {"id": 16, "topic": "Software", "question": "Perangkat lunak yang berfungsi menjembatani komunikasi antara sistem operasi dan hardware tertentu disebut...", "options": ["Compiler", "Driver", "Firmware", "Interpreter", "Middleware"], "answer": 1}, {"id": 17, "topic": "Software", "question": "Jenis lisensi perangkat lunak yang dapat digunakan secara gratis untuk jangka waktu percobaan tertentu sebelum membeli adalah...", "options": ["Freeware", "Shareware", "Open Source", "Proprietary", "Adware"], "answer": 1}, {"id": 18, "topic": "Software", "question": "Program utilitas bawaan Windows yang berfungsi merapikan susunan fragmen file pada harddisk mekanis adalah...", "options": ["Disk Cleanup", "Drive Defragmenter", "Task Manager", "Registry Editor", "Device Manager"], "answer": 1}, {"id": 19, "topic": "Software", "question": "Perangkat lunak yang digunakan untuk menerjemahkan bahasa pemrograman tingkat tinggi langsung baris demi baris saat dieksekusi adalah...", "options": ["Compiler", "Interpreter", "Assembler", "Linker", "Debugger"], "answer": 1}, {"id": 20, "topic": "Software", "question": "Contoh aplikasi yang tergolong dalam Spreadsheet (Pengolah Angka) adalah...", "options": ["Microsoft Word", "Adobe InDesign", "Microsoft Excel", "CorelDRAW", "MySQL"], "answer": 2}, {"id": 21, "topic": "Software", "question": "Perangkat lunak jahat yang menyandera data pengguna dengan cara mengenkripsinya lalu meminta tebusan adalah...", "options": ["Spyware", "Adware", "Ransomware", "Trojan", "Worm"], "answer": 2}, {"id": 22, "topic": "Software", "question": "Perangkat lunak firmware modern pengganti BIOS lama yang mendukung booting cepat dan kapasitas drive di atas 2.2 TB adalah...", "options": ["POST", "UEFI", "CMOS", "MBR", "NVRAM"], "answer": 1}, {"id": 23, "topic": "Software", "question": "Lisensi perangkat lunak bebas yang mewajibkan kode sumber turunan untuk tetap bersifat terbuka/bebas adalah...", "options": ["EULA", "GNU General Public License (GPL)", "Commercial License", "Proprietary License", "Trialware License"], "answer": 1}, {"id": 24, "topic": "Software", "question": "Aplikasi virtualisasi yang memungkinkan pengguna menjalankan beberapa sistem operasi secara bersamaan di atas OS utama adalah...", "options": ["Oracle VirtualBox", "CCleaner", "WinRAR", "Wireshark", "Cisco Packet Tracer"], "answer": 0}, {"id": 25, "topic": "Software", "question": "Program aplikasi yang digunakan khusus untuk mengelola, menyimpan, dan memanipulasi basis data berukuran besar adalah...", "options": ["DBMS (Database Management System)", "Operating System", "Graphic Editor", "Word Processor", "Utility Software"], "answer": 0}, {"id": 26, "topic": "Brainware", "question": "Profesi brainware yang bertugas merancang, menganalisis, dan memetakan kebutuhan sistem informasi sebelum dibuat aplikasi adalah...", "options": ["Programmer", "System Analyst", "Database Administrator", "Network Engineer", "Computer Operator"], "answer": 1}, {"id": 27, "topic": "Brainware", "question": "Personel yang bertugas menulis baris kode program berdasarkan rancangan desain sistem dinamakan...", "options": ["System Analyst", "Programmer", "Data Entry Operator", "Project Manager", "IT Auditor"], "answer": 1}, {"id": 28, "topic": "Brainware", "question": "Tingkatan brainware yang bertanggung menjaga keamanan, keandalan, dan kelancaran jaringan komputer organisasi adalah...", "options": ["Network Administrator", "Web Designer", "Technical Support", "Data Scientist", "Software Tester"], "answer": 0}, {"id": 29, "topic": "Brainware", "question": "Pengguna komputer biasa yang menggunakan aplikasi untuk menyelesaikan pekerjaan harian tanpa mengubah sistem dinamakan...", "options": ["Administrator", "System Developer", "End User / Operator", "Analyst", "Engineer"], "answer": 2}, {"id": 30, "topic": "Brainware", "question": "Spesialis brainware yang bertugas mengelola integritas, keamanan, cadangan, dan struktur basis data perusahaan adalah...", "options": ["Database Administrator (DBA)", "Hardware Engineer", "UI/UX Designer", "DevOps Engineer", "Helpdesk Support"], "answer": 0}, {"id": 31, "topic": "Brainware", "question": "Profesi IT yang berfokus pada pengujian kualitas lunak (mencari bug dan cacat sistem) sebelum dirilis adalah...", "options": ["Quality Assurance (QA) Tester", "Front-end Developer", "Scrum Master", "SEO Specialist", "Network Operator"], "answer": 0}, {"id": 32, "topic": "Brainware", "question": "Pihak yang memimpin seluruh jalannya proyek pengembangan perangkat lunak dari perencanaan hingga serah terima adalah...", "options": ["Project Manager", "Lead Programmer", "Senior Architect", "Systems Engineer", "Security Consultant"], "answer": 0}, {"id": 33, "topic": "Brainware", "question": "Teknisi yang bertugas merawat, memperbaiki, dan merakit perangkat keras komputer yang rusak dinamakan...", "options": ["Teknisi Komputer / Hardware Technician", "Software Architect", "System Integrator", "Data Analyst", "Scrum Master"], "answer": 0}, {"id": 34, "topic": "Brainware", "question": "Spesialis yang bertugas merancang antarmuka serta pengalaman kenyamanan pengguna dalam menggunakan aplikasi adalah...", "options": ["UI/UX Designer", "Database Architect", "Backend Developer", "Network Engineer", "System Auditor"], "answer": 0}, {"id": 35, "topic": "Brainware", "question": "Orang yang menyusup ke dalam sistem komputer untuk tujuan menguji dan memperkuat pertahanan keamanan (Ethical) disebut...", "options": ["Black Hat Hacker", "White Hat Hacker / Penetration Tester", "Script Kiddie", "Cracker", "Phisher"], "answer": 1}, {"id": 36, "topic": "Brainware", "question": "Petugas yang bertanggung jawab menginput data mentah ke dalam sistem komputer perusahaan secara rutin adalah...", "options": ["Data Entry Operator", "Data Scientist", "Data Engineer", "Business Intelligence Analyst", "System Admin"], "answer": 0}, {"id": 37, "topic": "Brainware", "question": "Jabatan tertinggi dalam manajemen teknologi informasi di sebuah perusahaan yang menentukan arah kebijakan IT adalah...", "options": ["Chief Information Officer (CIO) / CTO", "IT Helpdesk Lead", "Senior System Analyst", "Master Programmer", "Network Supervisor"], "answer": 0}, {"id": 38, "topic": "Arsitektur CPU", "question": "Komponen dalam CPU yang bertanggung jawab melakukan operasi perhitungan aritmatika dan logika dasar adalah...", "options": ["Control Unit (CU)", "Arithmetic Logic Unit (ALU)", "Register", "Cache Memory", "Internal Bus"], "answer": 1}, {"id": 39, "topic": "Arsitektur CPU", "question": "Komponen CPU yang bertugas mengatur lalu lintas data, mengkodekan instruksi, dan mengendalikan unit lain adalah...", "options": ["ALU", "Control Unit (CU)", "Accumulator", "Program Counter", "System Bus"], "answer": 1}, {"id": 40, "topic": "Arsitektur CPU", "question": "Register CPU yang berfungsi menyimpan alamat memori dari instruksi berikutnya yang akan dieksekusi dinamakan...", "options": ["Instruction Register (IR)", "Program Counter (PC)", "Memory Address Register (MAR)", "Accumulator (ACC)", "Stack Pointer"], "answer": 1}, {"id": 41, "topic": "Arsitektur CPU", "question": "Memori berkecepatan sangat tinggi yang berada di dalam atau dekat inti CPU untuk menyimpan data sementara yang sering diakses adalah...", "options": ["RAM", "Cache Memory", "Virtual Memory", "ROM", "Register Bank"], "answer": 1}, {"id": 42, "topic": "Arsitektur CPU", "question": "Urutan siklus kerja dasar CPU dalam memproses suatu instruksi adalah...", "options": ["Fetch -> Decode -> Execute", "Execute -> Fetch -> Decode", "Decode -> Fetch -> Execute", "Fetch -> Execute -> Store", "Decode -> Execute -> Fetch"], "answer": 0}, {"id": 43, "topic": "Arsitektur CPU", "question": "Register yang digunakan untuk menyimpan hasil sementara dari operasi perhitungan yang dilakukan oleh ALU adalah...", "options": ["Program Counter", "Instruction Register", "Accumulator", "Memory Data Register", "Status Register"], "answer": 2}, {"id": 44, "topic": "Arsitektur CPU", "question": "Bus sistem yang berfungsi membawa alamat lokasi memori atau I/O yang akan diakses oleh CPU adalah...", "options": ["Data Bus", "Address Bus", "Control Bus", "Expansion Bus", "Power Bus"], "answer": 1}, {"id": 45, "topic": "Arsitektur CPU", "question": "Satuan kecepatan detak gelombang jam internal CPU dalam mengeksekusi instruksi per detik diukur dalam...", "options": ["Byte/s", "Hertz (GHz)", "RPM", "FLOPs", "BPS"], "answer": 1}, {"id": 46, "topic": "Arsitektur CPU", "question": "Arsitektur prosesor yang menggunakan kumpulan instruksi sederhana dan berukuran tetap untuk eksekusi sangat cepat adalah...", "options": ["CISC", "RISC", "EPIC", "MISC", "VLIW"], "answer": 1}, {"id": 47, "topic": "Arsitektur CPU", "question": "Teknik di mana CPU mengeksekusi beberapa tahap instruksi secara tumpang tindih (overlapping) untuk meningkatkan efisiensi disebut...", "options": ["Multithreading", "Pipelining", "Overclocking", "Branch Prediction", "Hyper-Threading"], "answer": 1}, {"id": 48, "topic": "Arsitektur CPU", "question": "Register CPU yang menampung instruksi yang sedang atau baru saja diambil dari memori utama adalah...", "options": ["Instruction Register (IR)", "Program Counter (PC)", "Memory Data Register (MDR)", "Flag Register", "Base Register"], "answer": 0}, {"id": 49, "topic": "Arsitektur CPU", "question": "Jenis bus yang bersifat dua arah (bidirectional) untuk lalu lintas mentransfer data antara CPU dan memori adalah...", "options": ["Address Bus", "Data Bus", "Control Bus", "Interrupt Bus", "DMA Bus"], "answer": 1}, {"id": 50, "topic": "Arsitektur CPU", "question": "Teknologi pembuatan CPU yang menggabungkan beberapa unit pemroses (core) independen dalam satu chip fisik tunggal disebut...", "options": ["Single-Core Processor", "Multi-Core Processor", "Distributed Processing", "Parallel Co-Processor", "Quantum Core"], "answer": 1}];
+
+const complexQuestions = [{"id": 51, "topic": "Hardware", "question": "Manakah di antara perangkat berikut yang tergolong ke dalam perangkat masukan (input device)? (Pilih lebih dari satu)", "options": ["Barcode Scanner", "Plotter", "Graphics Tablet", "Thermal Printer", "Touchscreen"], "answers": [0, 2, 4]}, {"id": 52, "topic": "Hardware", "question": "Pilihlah perangkat lunak/keras yang berfungsi sebagai media penyimpanan data non-volatile! (Pilih lebih dari satu)", "options": ["NVMe SSD", "RAM DDR4", "Harddisk External", "Cache L2", "Flashdrive USB"], "answers": [0, 2, 4]}, {"id": 53, "topic": "Hardware", "question": "Berikut ini yang termasuk dalam kelompok perangkat keluaran (output device) adalah... (Pilih lebih dari satu)", "options": ["Monitor OLED", "Webcam", "Speaker Active", "Microphone", "Projector LCD"], "answers": [0, 2, 4]}, {"id": 54, "topic": "Hardware", "question": "Komponen manakah yang terpasang langsung pada Motherboard komputer? (Pilih lebih dari satu)", "options": ["Prosesor (CPU)", "Keyboard Wireless", "RAM Module", "Expansion Card (VGA)", "Mouse Gaming"], "answers": [0, 2, 3]}, {"id": 55, "topic": "Hardware", "question": "Perangkat keras mana saja yang berhubungan langsung dengan pemrosesan sinyal grafis dan tampilan visual? (Pilih lebih dari satu)", "options": ["GPU (Graphics Processing Unit)", "VRAM", "Sound Card", "DisplayPort Cable", "Network Card"], "answers": [0, 1, 3]}, {"id": 56, "topic": "Hardware", "question": "Manakah jenis konektor/port berikut yang digunakan untuk mentransfer data daya atau sinyal ke monitor? (Pilih lebih dari satu)", "options": ["HDMI", "DisplayPort", "RJ45", "VGA", "S/PDIF"], "answers": [0, 1, 3]}, {"id": 57, "topic": "Hardware", "question": "Manakah ciri-ciri utama dari memori RAM pada komputer? (Pilih lebih dari satu)", "options": ["Bersifat Volatile", "Kecepatan akses lebih tinggi dari Harddisk", "Menyimpan data secara permanen", "Penyimpanan sementara program berjalan", "Hanya bisa dibaca saja (read-only)"], "answers": [0, 1, 3]}, {"id": 58, "topic": "Hardware", "question": "Berikut ini yang merupakan contoh media penyimpanan berbasis teknologi Flash Memory adalah... (Pilih lebih dari satu)", "options": ["Micro SD Card", "SSD NVMe", "Magnetic Tape", "USB Flashdrive", "Floppy Disk"], "answers": [0, 1, 3]}, {"id": 59, "topic": "Hardware", "question": "Perangkat manakah yang memiliki fungsi ganda sebagai Input sekaligus Output (Hybrid Device)? (Pilih lebih dari satu)", "options": ["Layar Sentuh (Touchscreen)", "Headset (Headphone + Mic)", "Printer Multifungsi (Scan/Print)", "Keyboard Mechanical", "Barcode Reader"], "answers": [0, 1, 2]}, {"id": 60, "topic": "Hardware", "question": "Faktor apa saja yang mempengaruhi performa kecepatan suatu Harddisk Mekanis (HDD)? (Pilih lebih dari satu)", "options": ["Kecepatan Putaran Spindle (RPM)", "Kapasitas Cache Buffer", "Jenis Antarmuka Bus (SATA 3)", "Warna Casing Luar", "Bahan Kaki Rubber"], "answers": [0, 1, 2]}, {"id": 61, "topic": "Hardware", "question": "Perangkat jaringan mana yang tergolong perangkat keras pendukung sistem komputer? (Pilih lebih dari satu)", "options": ["Network Interface Card (NIC)", "Router", "Switch Hub", "Microsoft Edge", "Database Server"], "answers": [0, 1, 2]}, {"id": 62, "topic": "Hardware", "question": "Manakah komponen yang berperan penting dalam menjaga suhu aman operasional komponen komputer? (Pilih lebih dari satu)", "options": ["Heatsink Aluminium", "Thermal Paste", "Kipas Casing (Case Fan)", "Liquid Cooling Radiator", "Power Cable"], "answers": [0, 1, 2, 3]}, {"id": 63, "topic": "Hardware", "question": "Sebutkan jenis-jenis printer berdasarkan teknologi cetaknya! (Pilih lebih dari satu)", "options": ["Dot Matrix", "Inkjet", "LaserJet", "Thermal", "OLED"], "answers": [0, 1, 2, 3]}, {"id": 64, "topic": "Software", "question": "Manakah di antara sistem operasi berikut yang tergolong dalam kategori Open Source? (Pilih lebih dari satu)", "options": ["Ubuntu Linux", "Windows 11", "Fedora", "macOS", "Debian"], "answers": [0, 2, 4]}, {"id": 65, "topic": "Software", "question": "Berikut ini yang merupakan contoh perangkat lunak program utilitas (Utility Software) adalah... (Pilih lebih dari satu)", "options": ["Antivirus (Kaspersky)", "WinRAR / 7-Zip", "Disk Defragmenter", "Microsoft Word", "Adobe Photoshop"], "answers": [0, 1, 2]}, {"id": 66, "topic": "Software", "question": "Manakah tugas utama dari sebuah Sistem Operasi (Operating System)? (Pilih lebih dari satu)", "options": ["Manajemen Memori Utama", "Manajemen File & Berkas", "Manajemen Prosesor / Task", "Mengedit Foto Profesional", "Manajemen Perangkat I/O"], "answers": [0, 1, 2, 4]}, {"id": 67, "topic": "Software", "question": "Pilihlah aplikasi yang masuk dalam kelompok Web Browser! (Pilih lebih dari satu)", "options": ["Google Chrome", "Mozilla Firefox", "Microsoft Edge", "Brave Browser", "Microsoft Excel"], "answers": [0, 1, 2, 3]}, {"id": 68, "topic": "Software", "question": "Berikut ini yang merupakan contoh Perangkat Lunak Aplikasi (Application Software) adalah... (Pilih lebih dari satu)", "options": ["Adobe Illustrator", "VLC Media Player", "Microsoft PowerPoint", "Linux Kernel", "BIOS Firmware"], "answers": [0, 1, 2]}, {"id": 69, "topic": "Software", "question": "Manakah karakteristik utama dari Perangkat Lunak Berbayar / Commercial Software (Proprietary)? (Pilih lebih dari satu)", "options": ["Kode sumber ditutup (Closed Source)", "Memiliki hak cipta yang dilindungi", "Pengguna harus membeli lisensi", "Kode sumber bebas dimodifikasi siapapun", "Dapat dijual kembali tanpa batas"], "answers": [0, 1, 2]}, {"id": 70, "topic": "Software", "question": "Manakah aplikasi perkantoran yang berfungsi untuk pengolahan kata (Word Processor)? (Pilih lebih dari satu)", "options": ["Microsoft Word", "Google Docs", "LibreOffice Writer", "WPS Writer", "Microsoft Access"], "answers": [0, 1, 2, 3]}, {"id": 71, "topic": "Software", "question": "Manakah contoh ancaman perangkat lunak berbahaya (Malware)? (Pilih lebih dari satu)", "options": ["Virus", "Trojan Horse", "Ransomware", "Spyware", "Device Driver"], "answers": [0, 1, 2, 3]}, {"id": 72, "topic": "Software", "question": "Bahasa pemrograman manakah yang tergolong dalam bahasa pemrograman tingkat tinggi (High-Level Language)? (Pilih lebih dari satu)", "options": ["Python", "Java", "C++", "Assembly Language", "Machine Code"], "answers": [0, 1, 2]}, {"id": 73, "topic": "Software", "question": "Manakah jenis format berkas gambar berskala vektor maupun bitmap yang umum digunakan? (Pilih lebih dari satu)", "options": ["PNG", "JPEG", "SVG", "PDF", "MP3"], "answers": [0, 1, 2]}, {"id": 74, "topic": "Software", "question": "Manakah yang termasuk fungsi firmware dalam komputer? (Pilih lebih dari satu)", "options": ["Inisialisasi perangkat keras saat POST", "Memuat bootloader sistem operasi", "Menyediakan konfigurasi hardware dasar", "Mengedit berkas spreadsheet", "Memutar file musik MP3"], "answers": [0, 1, 2]}, {"id": 75, "topic": "Software", "question": "Sistem operasi seluler (Mobile OS) yang populer digunakan saat ini adalah... (Pilih lebih dari satu)", "options": ["Android OS", "Apple iOS", "Windows Server", "HarmonyOS", "Ubuntu Server"], "answers": [0, 1, 3]}, {"id": 76, "topic": "Brainware", "question": "Tugas-tugas yang menjadi tanggung jawab seorang Network Administrator meliputi... (Pilih lebih dari satu)", "options": ["Konfigurasi Router dan Switch", "Monitoring lalu lintas jaringan", "Mengatur hak akses dan keamanan jaringan", "Memperbaiki papan sirkuit cetak", "Menulis artikel blog pemasaran"], "answers": [0, 1, 2]}, {"id": 77, "topic": "Brainware", "question": "Manakah profesi IT yang berfokus pada tahapan pembangunan dan pembuatan kode aplikasi (Development)? (Pilih lebih dari satu)", "options": ["Front-end Developer", "Back-end Developer", "Full-stack Developer", "Hardware Assembler", "Data Entry Specialist"], "answers": [0, 1, 2]}, {"id": 78, "topic": "Brainware", "question": "Apa saja kemampuan mendasar yang wajib dimiliki oleh seorang System Analyst? (Pilih lebih dari satu)", "options": ["Pemahaman alur bisnis organisasi", "Kemampuan pemodelan sistem (UML/DFD)", "Komunikasi & analisis masalah", "Kemampuan mengetik cepat tanpa melihat", "Kemampuan menyolder kabel listrik"], "answers": [0, 1, 2]}, {"id": 79, "topic": "Brainware", "question": "Siapa saja yang tergolong ke dalam kelompok Brainware tingkat pengembang/pembangun sistem (System Developers)? (Pilih lebih dari satu)", "options": ["System Analyst", "Software Engineer", "Database Architect", "End User / Kasir Store", "Operator Cetak"], "answers": [0, 1, 2]}, {"id": 80, "topic": "Brainware", "question": "Tanggung jawab seorang Database Administrator (DBA) dalam perusahaan adalah... (Pilih lebih dari satu)", "options": ["Melakukan backup & recovery data", "Menjaga keamanan data dari akses ilegal", "Optimasi performa query database", "Menginstall kabel jaringan LAN", "Merakit casing komputer"], "answers": [0, 1, 2]}, {"id": 81, "topic": "Brainware", "question": "Peran brainware dalam menjaga keamanan siber (Cybersecurity) organisasi dilakukan oleh... (Pilih mebih dari satu)", "options": ["Security Analyst", "Penetration Tester", "Chief Information Security Officer (CISO)", "Data Entry Clerk", "Graphics Designer"], "answers": [0, 1, 2]}, {"id": 82, "topic": "Brainware", "question": "Etika dan tanggung jawab pengguna komputer (Brainware) yang baik antara lain... (Pilih lebih dari satu)", "options": ["Tidak menginstal aplikasi bajakan", "Menjaga kerahasiaan kata sandi akun", "Menghargai hak cipta karya digital", "Menyebarkan file malware ke publik", "Menggunakan komputer untuk kejahatan"], "answers": [0, 1, 2]}, {"id": 83, "topic": "Brainware", "question": "Tugas utama tim IT Technical Support / Helpdesk di perusahaan adalah... (Pilih lebih dari satu)", "options": ["Membantu pengguna saat terjadi masalah IT", "Menginstal OS dan aplikasi standar kerja", "Melakukan troubleshooting perangkat komputer", "Merancang arsitektur microservice", "Membuat analisis statistik pasar"], "answers": [0, 1, 2]}, {"id": 84, "topic": "Brainware", "question": "Profesi manakah yang erat kaitannya dengan pengelolaan Big Data dan Kecerdasan Buatan? (Pilih lebih dari satu)", "options": ["Data Scientist", "Machine Learning Engineer", "Data Engineer", "Hardware Technician", "Operator Input"], "answers": [0, 1, 2]}, {"id": 85, "topic": "Brainware", "question": "Komponen utama agar Brainware dapat bekerja efektif dalam sistem komputer meliputi... (Pilih lebih dari satu)", "options": ["Pengetahuan (Knowledge)", "Keterampilan (Skill)", "Sertifikasi / Pengalaman (Competency)", "Kapasitas RAM Komputer", "Kecepatan Internet"], "answers": [0, 1, 2]}, {"id": 86, "topic": "Brainware", "question": "Siapa saja pengguna komputer yang tergolong dalam kelompok 'Operator'? (Pilih lebih dari satu)", "options": ["Kasir minimarket menggunakan sistem POS", "Petugas Data Entry di bank", "Staf Administrasi mengetik surat", "Arsitek perangkat lunak", "Perancang chipset CPU"], "answers": [0, 1, 2]}, {"id": 87, "topic": "Brainware", "question": "Aktivitas jahat terkait brainware yang melanggar hukum siber (Cybercrime) adalah... (Pilih lebih dari satu)", "options": ["Phishing data nasabah", "Carding / Pencurian kartu kredit", "Hacking ilegal pada server", "Melakukan backup data rutin", "Memperbarui sistem operasi"], "answers": [0, 1, 2]}, {"id": 88, "topic": "Arsitektur CPU", "question": "Manakah komponen utama yang menyusun Arsitektur CPU Von Neumann? (Pilih lebih dari satu)", "options": ["Control Unit (CU)", "Arithmetic Logic Unit (ALU)", "Unit Memori (Memory Unit)", "Input/Output Unit", "Unit Pendingin Cairan"], "answers": [0, 1, 2, 3]}, {"id": 89, "topic": "Arsitektur CPU", "question": "Manakah jenis register di dalam CPU yang berfungsi membantu aliran data instruksi? (Pilih lebih dari satu)", "options": ["Program Counter (PC)", "Instruction Register (IR)", "Accumulator (ACC)", "Memory Address Register (MAR)", "SSD Drive"], "answers": [0, 1, 2, 3]}, {"id": 90, "topic": "Arsitektur CPU", "question": "Fungsi dari Control Unit (CU) di dalam CPU antara lain adalah... (Pilih lebih dari satu)", "options": ["Mengambil instruksi dari memori utama (Fetch)", "Menerjemahkan kode instruksi (Decode)", "Mengatur sinyal kendali bus", "Melakukan perhitungan penjumlahan angka", "Menyimpan file dokumen kerja"], "answers": [0, 1, 2]}, {"id": 91, "topic": "Arsitektur CPU", "question": "Ciri-ciri utama dari Cache Memory pada CPU adalah... (Pilih lebih dari satu)", "options": ["Kecepatan akses jauh lebih cepat dibanding RAM", "Kapasitas simpan relatif kecil", "Letaknya sangat dekat/di dalam inti CPU", "Harganya sangat murah", "Menggunakan piringan magnetik"], "answers": [0, 1, 2]}, {"id": 92, "topic": "Arsitektur CPU", "question": "Manakah jenis bus internal yang menghubungkan CPU dengan komponen luar? (Pilih lebih dari satu)", "options": ["Data Bus", "Address Bus", "Control Bus", "Power Bus", "SATA Cable"], "answers": [0, 1, 2]}, {"id": 93, "topic": "Arsitektur CPU", "question": "Operasi dasar apa saja yang dilakukan oleh Arithmetic Logic Unit (ALU)? (Pilih lebih dari satu)", "options": ["Operasi Aritmatika (+, -, *, /)", "Operasi Logika (AND, OR, NOT)", "Operasi Perbandingan (==, >, <)", "Pengambilan kode bootloader", "Penyimpanan data jangka panjang"], "answers": [0, 1, 2]}, {"id": 94, "topic": "Arsitektur CPU", "question": "Faktor-faktor yang mempengaruhi kinerja dan kecepatan eksekusi sebuah CPU adalah... (Pilih lebih dari satu)", "options": ["Clock Speed (Frekuensi GHz)", "Jumlah Core / Inti Prosesor", "Ukuran Kapasitas Cache Memory", "Arsitektur Kumpulan Instruksi (RISC/CISC)", "Warna Casing Komputer"], "answers": [0, 1, 2, 3]}, {"id": 95, "topic": "Arsitektur CPU", "question": "Tingkatan Cache Memory yang umum berada dalam arsitektur prosesor modern meliputi... (Pilih lebih dari satu)", "options": ["L1 Cache", "L2 Cache", "L3 Cache", "L4 Cache (pada beberapa CPU)", "Flash Cache"], "answers": [0, 1, 2]}, {"id": 96, "topic": "Arsitektur CPU", "question": "Perbedaan utama antara arsitektur RISC dan CISC adalah... (Pilih lebih dari satu)", "options": ["RISC memiliki instruksi sederhana dan cepat", "CISC memiliki instruksi kompleks yang beragam", "RISC mengandalkan banyak register", "CISC menggunakan format instruksi berukuran bervariasi", "RISC hanya bisa digunakan di komputer super"], "answers": [0, 1, 2, 3]}, {"id": 97, "topic": "Arsitektur CPU", "question": "Sebutkan tahapan dalam Siklus Instruksi (Instruction Cycle) CPU! (Pilih lebih dari satu)", "options": ["Fetch (Mengambil instruksi)", "Decode (Menerjemahkan instruksi)", "Execute (Mengeksekusi instruksi)", "Store (Menyimpan hasil)", "Defrag (Merapikan sektor)"], "answers": [0, 1, 2, 3]}, {"id": 98, "topic": "Arsitektur CPU", "question": "Manakah keuntungan dari teknologi Multi-Core pada CPU modern? (Pilih lebih dari satu)", "options": ["Meningkatkan kemampuan Multitasking", "Memungkinkan eksekusi paralel secara simultan", "Efisiensi daya kerja beban terbagi", "Membuat ukuran fisik harddisk lebih besar", "Menghilangkan kebutuhan RAM"], "answers": [0, 1, 2]}, {"id": 99, "topic": "Arsitektur CPU", "question": "Sinyal yang dikirimkan oleh peranti I/O ke CPU untuk meminta perhatian eksekusi dinamakan... (Pilih lebih dari satu)", "options": ["Interrupt Request (IRQ)", "System Call", "Control Signal", "Defrag Request", "Overclock Command"], "answers": [0, 1, 2]}, {"id": 100, "topic": "Arsitektur CPU", "question": "Manakah pernyataan yang benar mengenai konsep Pipelining pada CPU? (Pilih lebih dari satu)", "options": ["Membagi eksekusi instruksi menjadi beberapa tahap", "Tiap tahap dikerjakan bersamaan untuk instruksi berbeda", "Meningkatkan throughput pemrosesan instruksi", "Menghentikan seluruh CPU saat satu instruksi berjalan", "Hanya terdapat pada komputer tabung hampa"], "answers": [0, 1, 2]}];
+
+const QUESTIONS_PER_PAGE = 25;
+let currentPage = 0;
+let totalPages = 1 + Math.ceil((singleQuestions.length + complexQuestions.length) / QUESTIONS_PER_PAGE);
+
+let answeredQuestions = new Set();
+const totalQuestions = 100;
+
+function initQuiz() {
+    const container = document.getElementById('questions-container');
+    const allQuestions = [
+        ...singleQuestions.map(q => ({...q, type: 'single'})),
+        ...complexQuestions.map(q => ({...q, type: 'complex'}))
+    ];
+
+    let pageNum = 1;
+    let html = '';
+    
+    for (let i = 0; i < allQuestions.length; i += QUESTIONS_PER_PAGE) {
+        const chunk = allQuestions.slice(i, i + QUESTIONS_PER_PAGE);
+        html += `<div class="page-section" id="page-${pageNum}">`;
+        
+        let sectionTitle = pageNum <= 2 ? "Bagian 1: Pilihan Ganda Tunggal" : "Bagian 2: Pilihan Ganda Kompleks";
+        let sectionDesc = pageNum <= 2 ? "Pilih salah satu jawaban yang paling tepat." : "Pilih <b>lebih dari satu</b> jawaban yang benar pada setiap soal.";
+        
+        html += `
+        <div class="card-header" style="border-top-color: #1a73e8; padding: 16px 24px;">
+            <h2 style="font-family:'Google Sans'; font-size:20px; margin-bottom:4px;">${sectionTitle} (Hal ${pageNum})</h2>
+            <p style="font-size:14px; color:#5f6368;">${sectionDesc}</p>
+        </div>`;
+
+        chunk.forEach((q) => {
+            html += `
+            <div class="card" id="q-container-${q.id}">
+                <span class="badge-topic">${q.topic}</span>
+                ${q.type === 'complex' ? '<span class="complex-badge">Multi-Jawaban</span>' : ''}
+                <div class="question-title"><span style="font-weight:bold;">${q.id}.</span> ${q.question}</div>
+                <div class="options-group">`;
+            
+            q.options.forEach((opt, optIndex) => {
+                if (q.type === 'single') {
+                    html += `
+                    <label class="option-label">
+                        <input type="radio" name="q${q.id}" value="${optIndex}" required>
+                        <span>${String.fromCharCode(65 + optIndex)}. ${opt}</span>
+                    </label>`;
+                } else {
+                    html += `
+                    <label class="option-label">
+                        <input type="checkbox" name="q${q.id}" value="${optIndex}">
+                        <span>${String.fromCharCode(65 + optIndex)}. ${opt}</span>
+                    </label>`;
+                }
+            });
+            html += `</div></div>`;
+        });
+
+        html += `<div class="btn-container">`;
+        html += `<button type="button" class="btn-outline" onclick="prevPage()">Sebelumnya</button>`;
+        
+        if (pageNum === totalPages - 1) {
+            html += `<button type="button" onclick="triggerSubmitConfirmation()" style="background-color:var(--success);">Kirim Jawaban</button>`;
+        } else {
+            html += `<button type="button" onclick="nextPage()">Berikutnya</button>`;
+        }
+        html += `</div></div>`;
+        pageNum++;
+    }
+    container.innerHTML = html;
+    
+    generateSidebar();
+    setupAnswerTracking();
+    updateProgress();
+}
+
+function generateSidebar() {
+    let sidebarHtml = '';
+    for(let i=1; i<=totalQuestions; i++) {
+        sidebarHtml += `<div class="nav-box" id="nav-box-${i}" onclick="jumpToQuestion(${i})" title="Lompat ke Soal No. ${i}">${i}</div>`;
+    }
+    document.getElementById('nav-grid').innerHTML = sidebarHtml;
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('show');
+}
+
+function setupAnswerTracking() {
+    const form = document.getElementById('quizForm');
+    form.addEventListener('change', function(e) {
+        if(e.target.name && e.target.name.startsWith('q')) {
+            const qId = parseInt(e.target.name.substring(1));
+            const isCheckbox = e.target.type === 'checkbox';
+            
+            if(isCheckbox) {
+                const checked = form.querySelectorAll(`input[name="q${qId}"]:checked`);
+                if(checked.length > 0) {
+                    answeredQuestions.add(qId);
+                } else {
+                    answeredQuestions.delete(qId);
+                }
+            } else {
+                answeredQuestions.add(qId);
+            }
+            const box = document.getElementById(`nav-box-${qId}`);
+            if(box) {
+                if(answeredQuestions.has(qId)) box.classList.add('answered');
+                else box.classList.remove('answered');
+            }
+        }
+    });
+}
+
+function jumpToQuestion(qId) {
+    const targetPage = Math.ceil(qId / QUESTIONS_PER_PAGE);
+    
+    if(currentPage === 0 && !validateCurrentPage()) return;
+    
+    if(currentPage !== targetPage) {
+        document.getElementById(`page-${currentPage}`).classList.remove('active');
+        currentPage = targetPage;
+        document.getElementById(`page-${currentPage}`).classList.add('active');
+        updateProgress();
+    }
+    
+    const targetElement = document.getElementById(`q-container-${qId}`);
+    if(targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        targetElement.style.border = '2px solid var(--primary)';
+        setTimeout(() => { targetElement.style.border = '1px solid var(--border-color)'; }, 1500);
+    }
+    
+    if(window.innerWidth <= 800) {
+        document.getElementById('sidebar').classList.remove('show');
+    }
+}
+
+function validateCurrentPage() {
+    const currentSection = document.getElementById(`page-${currentPage}`);
+    const inputs = currentSection.querySelectorAll('input[required], select[required]');
+    let isValid = true;
+    
+    inputs.forEach(input => {
+        if (!input.checkValidity()) {
+            input.reportValidity();
+            isValid = false;
+        }
+    });
+    
+    const radios = currentSection.querySelectorAll('input[type="radio"]');
+    const radioGroups = new Set(Array.from(radios).map(r => r.name));
+    radioGroups.forEach(name => {
+        const checked = currentSection.querySelector(`input[name="${name}"]:checked`);
+        if (!checked) {
+            const firstRadio = currentSection.querySelector(`input[name="${name}"]`);
+            if (firstRadio && firstRadio.hasAttribute('required')) {
+                firstRadio.reportValidity();
+                isValid = false;
+            }
+        }
+    });
+    return isValid;
+}
+
+function nextPage() {
+    if (!validateCurrentPage()) return;
+    document.getElementById(`page-${currentPage}`).classList.remove('active');
+    currentPage++;
+    document.getElementById(`page-${currentPage}`).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateProgress();
+}
+
+function prevPage() {
+    document.getElementById(`page-${currentPage}`).classList.remove('active');
+    currentPage--;
+    document.getElementById(`page-${currentPage}`).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateProgress();
+}
+
+function updateProgress() {
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    const percent = ((currentPage + 1) / totalPages) * 100;
+    progressFill.style.width = percent + '%';
+    progressText.innerText = `Halaman ${currentPage + 1} dari ${totalPages}`;
+}
+
+function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.className = "show";
+    setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 5000);
+}
+
+function triggerSubmitConfirmation() {
+    if (!validateCurrentPage()) return;
+    
+    let missingQuestions = [];
+    for(let i=1; i<=totalQuestions; i++) {
+        if(!answeredQuestions.has(i)) {
+            missingQuestions.push(i);
+        }
+    }
+
+    const modalTitle = document.getElementById('modal-title');
+    const modalDesc = document.getElementById('modal-desc');
+    const listArea = document.getElementById('unanswered-list');
+
+    if(missingQuestions.length === 0) {
+        modalTitle.innerText = "Konfirmasi Pengiriman";
+        modalTitle.style.color = "var(--text-main)";
+        modalDesc.innerHTML = "Apakah Anda yakin telah selesai dan ingin mengirim jawaban?";
+        listArea.style.display = "none";
+    } else {
+        modalTitle.innerText = "Peringatan!";
+        modalTitle.style.color = "var(--danger)";
+        modalDesc.innerHTML = `Ada <strong style="color:var(--danger);">${missingQuestions.length}</strong> soal yang belum dijawab!`;
+        listArea.style.display = "block";
+        listArea.innerHTML = "<b>Belum dijawab:</b> Soal No. " + missingQuestions.join(", ");
+    }
+
+    document.getElementById('submitModal').style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById('submitModal').style.display = "none";
+}
+
+function processSubmission(force = false) {
+    closeModal();
+    quizCompleted = true;
+    
+    const form = document.getElementById('quizForm');
+    const formData = new FormData(form);
+    
+    let scoreSingle = 0;
+    let scoreComplex = 0;
+
+    singleQuestions.forEach(q => {
+        const answer = formData.get(`q${q.id}`); 
+        if (answer !== null && parseInt(answer) === q.answer) {
+            scoreSingle++;
+        }
+    });
+
+    complexQuestions.forEach(q => {
+        const selected = formData.getAll(`q${q.id}`).map(val => parseInt(val));
+        const correctAnswers = q.answers;
+        
+        const isMatch = selected.length === correctAnswers.length && 
+                        selected.every(val => correctAnswers.includes(val));
+        
+        if(isMatch) {
+            scoreComplex++;
+        }
+    });
+
+    const totalScore = scoreSingle + scoreComplex;
+    
+    const nama = force ? (formData.get('nama') || "Gagal/Force Submit") : formData.get('nama');
+    document.getElementById('res-nama').innerText = nama;
+    document.getElementById('res-kelas').innerText = formData.get('kelas') || "-";
+    document.getElementById('res-absen').innerText = formData.get('absen') || "-";
+    
+    const now = new Date();
+    document.getElementById('res-waktu').innerText = now.toLocaleString('id-ID');
+    
+    document.getElementById('res-score').innerText = totalScore;
+    document.getElementById('res-pg1').innerText = `${scoreSingle} / 50`;
+    document.getElementById('res-pg2').innerText = `${scoreComplex} / 50`;
+
+    const statusEl = document.getElementById('res-status');
+    const stampEl = document.getElementById('res-stamp');
+    
+    if(totalScore >= 75) {
+        statusEl.innerText = "Selamat! Anda memenuhi KKM.";
+        statusEl.style.color = "var(--success)";
+        stampEl.innerText = "LULUS";
+        stampEl.style.color = "var(--success)";
+        stampEl.style.borderColor = "var(--success)";
+    } else {
+        statusEl.innerText = "Anda belum memenuhi KKM, silakan pelajari materi kembali.";
+        statusEl.style.color = "var(--danger)";
+        stampEl.innerText = "REMIDI";
+        stampEl.style.color = "var(--danger)";
+        stampEl.style.borderColor = "var(--danger)";
+    }
+
+    document.getElementById('quizForm').style.display = 'none';
+    document.getElementById('sidebar').style.display = 'none';
+    document.querySelector('.sidebar-toggle-btn').style.display = 'none';
+    document.getElementById('progress-wrapper').style.display = 'none';
+    document.getElementById('result-section').style.display = 'block';
+    
+    // Perbaikan Bug Screenshot: Pastikan posisi scroll ada di paling atas
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    showToast("Memproses hasil & mendownload sertifikat...");
+    setTimeout(() => {
+        downloadScreenshot(nama);
+    }, 1500);
+}
+
+function downloadScreenshot(studentName = null) {
+    const card = document.getElementById('result-card-downloadable');
+    if(!studentName) {
+        studentName = document.getElementById('res-nama').innerText;
+    }
+    
+    // Perbaikan Konfigurasi html2canvas untuk web hosting / GitHub
+    html2canvas(card, { 
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,          // Mengizinkan render gambar beda asal (CORS issue fix)
+        backgroundColor: '#ffffff' // Memaksa background menjadi putih agar tidak kosong/hitam
+    }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        
+        let safeName = studentName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+        let dateStr = new Date().toISOString().slice(0,10);
+        link.download = `Hasil_SK_${safeName}_${dateStr}.png`;
+        link.href = imgData;
+        link.click();
+        
+        showToast("Bukti nilai berhasil di-download!");
+    }).catch(err => {
+        console.error("Screenshot error:", err);
+        showToast("Gagal mengambil screenshot otomatis.");
+    });
+}
+
+initQuiz();
+
+</script>
+</body>
+</html>
