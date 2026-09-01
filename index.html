@@ -326,7 +326,7 @@
             margin: 0 auto;
         }
         .result-card {
-            background-color: #ffffff; /* PERBAIKAN: Background putih solid agar html2canvas tidak error/metalik */
+            background-color: #ffffff;
             border-radius: 12px;
             padding: 30px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
@@ -369,12 +369,15 @@
             margin-bottom: 24px;
             min-width: 200px;
         }
-        .score-box h2 {
-            font-size: 60px;
+        /* PERBAIKAN: Mengganti tag font kustom h2 dengan class div standar web-safe Arial */
+        .angka-nilai {
+            font-size: 64px;
+            font-weight: 700;
             margin: 0 0 5px 0;
-            line-height: normal; /* PERBAIKAN: Mencegah teks terpotong/hilang saat discreenshot */
+            line-height: 1.2;
+            font-family: Arial, Helvetica, sans-serif;
             display: block;
-            font-family: 'Google Sans', sans-serif;
+            text-align: center;
         }
         .score-box span {
             font-size: 14px;
@@ -624,7 +627,7 @@
                     <!-- Garis Ganda Kop Surat -->
                     <hr class="kop-garis">
                     
-                    <h1 class="title" style="text-align: center; margin-bottom: 15px;">Ulangan Harian</h1>
+                    <h1 class="title" style="text-align: center; margin-bottom: 15px;">ULANGAN HARIAN</h1>
                     <p class="subtitle"><strong>Mata Pelajaran:</strong> Informatika - Sistem Komputer</p>
                     <p class="subtitle"><strong>Guru Pengampu:</strong> Gusty Lazuardi S.T., Gr.</p>
                     <hr style="margin: 12px 0;">
@@ -676,7 +679,8 @@
                 </div>
 
                 <div class="score-box">
-                    <h2 id="res-score">0</h2>
+                    <!-- PERBAIKAN: Mengganti h2 menjadi div dan menerapkan class khusus bebas bug font -->
+                    <div class="angka-nilai" id="res-score">0</div>
                     <span>NILAI AKHIR / 100</span>
                 </div>
 
@@ -724,10 +728,8 @@
 /* =========================================
    ANTI-CHEAT SYSTEM DENGAN ALARM SIRINE
 ========================================= */
-// 1. Disable klik kanan
 document.addEventListener('contextmenu', event => event.preventDefault());
 
-// 2. Disable Copy Paste & Shortcut keyboard
 document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'p' || e.key === 'u' || e.key === 's')) {
         e.preventDefault();
@@ -735,10 +737,8 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// 3. Inisialisasi dan Generator Suara Alarm (Web Audio API)
 let audioCtx;
 
-// Fungsi memancing browser untuk mengizinkan audio saat user berinteraksi pertama kali
 function unlockAudio() {
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -748,7 +748,6 @@ function unlockAudio() {
     }
 }
 
-// Pasang pendeteksi klik/sentuh untuk membuka kunci audio
 document.body.addEventListener('click', unlockAudio, { once: true });
 document.body.addEventListener('touchstart', unlockAudio, { once: true });
 
@@ -759,7 +758,6 @@ function playCheatAlarm() {
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
 
-        // Membuat suara bising sirine
         oscillator.type = 'sawtooth'; 
         oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime); 
         oscillator.frequency.linearRampToValueAtTime(400, audioCtx.currentTime + 0.5); 
@@ -777,7 +775,6 @@ function playCheatAlarm() {
     }
 }
 
-// 4. Deteksi Pindah Tab / Tombol Home (Visibility Change)
 let cheatCount = 0;
 let quizCompleted = false;
 
@@ -786,26 +783,21 @@ document.addEventListener("visibilitychange", () => {
     
     const isQuizActive = document.getElementById('quizForm').style.display !== 'none';
     
-    // Jika siswa keluar dari layar ujian
     if (document.visibilityState === "hidden" && isQuizActive) {
         cheatCount++;
     }
     
-    // Ketika siswa kembali ke layar ujian, bunyikan alarm
     if (document.visibilityState === "visible" && isQuizActive && cheatCount > 0) {
-        
-        // Memastikan konteks audio terbangun kembali
         if (audioCtx && audioCtx.state === 'suspended') {
             audioCtx.resume();
         }
         
         playCheatAlarm(); 
         
-        // Diberi jeda agar sistem audio ter-trigger sebelum alert nge-freeze browser
         setTimeout(() => {
             if(cheatCount >= 3) {
                 alert(`🚨 PERINGATAN PELANGGARAN BERAT! 🚨\n\nAnda telah keluar dari aplikasi/browser sebanyak ${cheatCount} kali.\nIni adalah batas maksimal pelanggaran!\n\nSistem akan mengirim dan mengunci jawaban Anda secara otomatis sekarang juga.`);
-                processSubmission(true); // Paksa submit
+                processSubmission(true);
             } else {
                 alert(`⚠️ PERINGATAN KEAMANAN TERDETEKSI! ⚠️\n\nAnda terdeteksi menekan tombol Home, keluar dari halaman ujian, atau membuka layar lain.\n\nPeringatan ke-${cheatCount} dari maksimal 3 kali pelanggaran. Jika mencapai 3 kali, ujian akan langsung dihentikan!`);
             }
@@ -1096,7 +1088,6 @@ function processSubmission(force = false) {
     const statusEl = document.getElementById('res-status');
     const stampEl = document.getElementById('res-stamp');
     
-    // Perbaikan Nilai KKM menjadi 70
     if(totalScore >= 70) {
         statusEl.innerText = "Selamat! Anda memenuhi KKM.";
         statusEl.style.color = "var(--success)";
@@ -1134,7 +1125,7 @@ function downloadScreenshot(studentName = null) {
     html2canvas(card, { 
         scale: 2,
         useCORS: true, 
-        backgroundColor: '#ffffff', // Background putih solid fix issue metalik gradient
+        backgroundColor: '#ffffff',
         logging: false
     }).then(canvas => {
         try {
