@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ulangan Harian - Sistem Komputer</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.5;
-            padding: 20px 15px;
+            padding: 15px;
             /* Anti copy-paste style */
             user-select: none; 
             -webkit-user-select: none;
@@ -99,6 +99,7 @@
             display: flex;
             gap: 20px;
             max-width: 1100px;
+            width: 100%;
             margin: 0 auto;
             align-items: flex-start;
         }
@@ -157,15 +158,16 @@
             background: var(--primary-light);
             color: var(--primary);
             font-weight: bold;
-            padding: 10px;
+            padding: 12px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 14px;
         }
 
         .container {
             width: 100%;
-            max-width: 768px;
+            max-width: 100%; 
             flex-grow: 1;
         }
         
@@ -174,7 +176,7 @@
             border-radius: 8px;
             border: 1px solid var(--border-color);
             margin-bottom: 16px;
-            padding: 24px;
+            padding: 20px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             position: relative;
             overflow: hidden;
@@ -182,14 +184,14 @@
         }
         .card-header {
             border-radius: 8px;
-            padding: 24px;
+            padding: 20px;
             background: var(--card-bg);
             margin-bottom: 16px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         h1.title {
             font-family: 'Google Sans', sans-serif;
-            font-size: 28px;
+            font-size: 26px;
         }
         p.subtitle {
             font-size: 14px;
@@ -204,7 +206,7 @@
             font-family: 'Google Sans', sans-serif;
             font-weight: 500;
             margin-bottom: 8px;
-            font-size: 16px;
+            font-size: 15px;
         }
         .required::after {
             content: " *";
@@ -227,7 +229,7 @@
         }
         .question-title {
             font-family: 'Google Sans', sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             margin-bottom: 12px;
         }
         .options-group {
@@ -237,9 +239,9 @@
         }
         .option-label {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             cursor: pointer;
-            padding: 8px;
+            padding: 10px;
             border-radius: 4px;
             transition: background 0.2s;
         }
@@ -247,6 +249,7 @@
             background: #f1f3f4;
         }
         .option-label input {
+            margin-top: 3px;
             margin-right: 12px;
             transform: scale(1.2);
             accent-color: var(--primary);
@@ -256,19 +259,21 @@
             display: flex;
             justify-content: space-between;
             margin-top: 24px;
-            padding-bottom: 40px;
+            padding-bottom: 20px;
+            gap: 10px;
         }
         button {
             background-color: var(--primary);
             color: white;
             border: none;
             border-radius: 4px;
-            padding: 10px 24px;
+            padding: 12px 20px;
             font-family: 'Google Sans', sans-serif;
             font-weight: 500;
             font-size: 14px;
             cursor: pointer;
             transition: background 0.3s;
+            flex: 1; 
         }
         button:hover {
             background-color: #512da8;
@@ -321,35 +326,35 @@
             margin: 0 auto;
         }
         .result-card {
-            background: #fff;
+            background-color: #ffffff; /* PERBAIKAN: Background putih solid agar html2canvas tidak error/metalik */
             border-radius: 12px;
-            padding: 40px;
+            padding: 30px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             text-align: center;
             border: 2px solid var(--primary);
             position: relative;
-            background-image: radial-gradient(circle at 100% 100%, #f0ebf8 0%, transparent 50%), radial-gradient(circle at 0% 0%, #e8f0fe 0%, transparent 50%);
         }
         img.result-logo {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             object-fit: contain;
             display: block;
             margin: 0 auto 16px;
         }
         .result-title {
             font-family: 'Google Sans', sans-serif;
-            font-size: 24px;
+            font-size: 22px;
             color: var(--text-main);
             margin-bottom: 20px;
         }
         .student-info {
             text-align: left;
             margin-bottom: 24px;
-            background: rgba(255,255,255,0.8);
+            background: #f8f9fa;
             padding: 16px;
             border-radius: 8px;
             border: 1px dashed var(--border-color);
+            font-size: 14px;
         }
         .student-info p {
             margin-bottom: 4px;
@@ -365,13 +370,16 @@
             min-width: 200px;
         }
         .score-box h2 {
-            font-size: 64px;
-            margin: 0;
-            line-height: 1;
+            font-size: 60px;
+            margin: 0 0 5px 0;
+            line-height: normal; /* PERBAIKAN: Mencegah teks terpotong/hilang saat discreenshot */
+            display: block;
+            font-family: 'Google Sans', sans-serif;
         }
         .score-box span {
-            font-size: 16px;
+            font-size: 14px;
             opacity: 0.9;
+            display: block;
         }
         .details-box {
             display: flex;
@@ -383,21 +391,22 @@
         }
         .details-box div {
             text-align: center;
+            font-size: 14px;
         }
         .details-box strong {
             display: block;
-            font-size: 20px;
+            font-size: 18px;
             color: var(--primary);
         }
         .stamp {
             position: absolute;
-            bottom: 40px;
-            right: 40px;
+            bottom: 30px;
+            right: 20px;
             border: 3px solid var(--danger);
             color: var(--danger);
             font-weight: bold;
-            font-size: 24px;
-            padding: 8px 16px;
+            font-size: 20px;
+            padding: 6px 12px;
             border-radius: 8px;
             transform: rotate(-15deg);
             opacity: 0.8;
@@ -408,7 +417,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 80px;
+            font-size: 60px;
             color: rgba(0,0,0,0.03);
             white-space: nowrap;
             pointer-events: none;
@@ -463,7 +472,7 @@
             color: #1a73e8;
             padding: 2px 8px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             margin-bottom: 8px;
             display: inline-block;
@@ -474,7 +483,7 @@
             color: #d93025;
             padding: 2px 8px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             margin-left: 8px;
             display: inline-block;
@@ -495,7 +504,7 @@
             background: #fff;
             width: 90%;
             max-width: 450px;
-            padding: 30px;
+            padding: 25px;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             text-align: center;
@@ -503,11 +512,12 @@
         .modal-card h2 {
             font-family: 'Google Sans', sans-serif;
             margin-bottom: 12px;
-            font-size: 22px;
+            font-size: 20px;
         }
         .modal-card p {
             margin-bottom: 16px;
             color: var(--text-secondary);
+            font-size: 14px;
         }
         .unanswered-box {
             background: #fff3e0;
@@ -517,7 +527,7 @@
             border-radius: 6px;
             max-height: 120px;
             overflow-y: auto;
-            font-size: 14px;
+            font-size: 13px;
             margin-bottom: 24px;
             text-align: left;
             display: none;
@@ -527,40 +537,46 @@
             justify-content: space-between;
             gap: 12px;
         }
-        .modal-actions button {
-            width: 50%;
-        }
 
-        /* Responsive Breakpoints */
-        @media (max-width: 800px) {
-            .layout-wrapper { flex-direction: column; }
+        /* --- RESPONSIVE BREAKPOINTS UNTUK HP DAN TABLET --- */
+        @media (max-width: 1024px) {
+            .layout-wrapper { 
+                flex-direction: column; 
+            }
             .sidebar { 
                 width: 100%; 
                 position: static; 
-                max-height: 250px; 
+                max-height: 280px; 
                 display: none; 
+                margin-bottom: 15px;
             }
-            .sidebar.show { display: block; }
-            .sidebar-toggle-btn { display: block; }
-            .stamp {
-                font-size: 18px;
-                bottom: 20px;
-                right: 20px;
+            .sidebar.show { 
+                display: block; 
+            }
+            .sidebar-toggle-btn { 
+                display: block; 
+            }
+            .container { 
+                max-width: 100%; 
             }
         }
+        
         @media (max-width: 600px) {
             .kop-surat {
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
             }
             .kop-sekolah {
-                font-size: 20px;
+                font-size: 18px;
             }
             .kop-yayasan {
-                font-size: 12px;
+                font-size: 11px;
             }
             .kop-alamat {
-                font-size: 11px;
+                font-size: 10px;
+            }
+            .kop-logo {
+                width: 70px;
             }
         }
     </style>
@@ -578,6 +594,7 @@
 
     <!-- Main Container -->
     <div class="container main-content" id="main-content">
+        <!-- Tombol untuk HP -->
         <button type="button" class="sidebar-toggle-btn" onclick="toggleSidebar()">Lihat Peta Soal / Navigasi</button>
         
         <div class="progress-wrapper" id="progress-wrapper">
@@ -611,7 +628,7 @@
                     <p class="subtitle"><strong>Mata Pelajaran:</strong> Informatika - Sistem Komputer</p>
                     <p class="subtitle"><strong>Guru Pengampu:</strong> Gusty Lazuardi S.T., Gr.</p>
                     <hr style="margin: 12px 0;">
-                    <p style="font-size: 14px; background: #e8f0fe; padding: 10px; border-radius: 6px; color: #1a73e8;">
+                    <p style="font-size: 13px; background: #e8f0fe; padding: 10px; border-radius: 6px; color: #1a73e8;">
                         <strong>Petunjuk:</strong> Terdapat 100 soal dalam ulangan ini. Soal 1-50 adalah pilihan ganda tunggal (pilih 1 jawaban). Soal 51-100 adalah pilihan ganda kompleks (pilih 2 atau lebih jawaban yang benar). Isilah identitas Anda sebelum memulai.
                     </p>
                 </div>
@@ -636,7 +653,7 @@
                 </div>
                 
                 <div class="btn-container" style="justify-content: flex-end;">
-                    <button type="button" onclick="nextPage()">Berikutnya</button>
+                    <button type="button" onclick="nextPage()" style="flex: 0 1 auto;">Berikutnya</button>
                 </div>
             </div>
 
@@ -646,7 +663,6 @@
 
         <!-- Result Section -->
         <div id="result-section">
-            <!-- Area ini yang akan discreenshot oleh sistem -->
             <div class="result-card" id="result-card-downloadable">
                 <div class="watermark">SMK CHOIRIYAH</div>
                 <img src="logo.png" alt="Logo SMK Choiriyah" class="result-logo">
@@ -666,22 +682,22 @@
 
                 <div class="details-box">
                     <div>
-                        <span>PG Tunggal Benar</span>
+                        <span>PG Tunggal</span>
                         <strong id="res-pg1">0 / 50</strong>
                     </div>
                     <div>
-                        <span>PG Kompleks Poin</span>
+                        <span>PG Kompleks</span>
                         <strong id="res-pg2">0 / 50</strong>
                     </div>
                 </div>
 
-                <p style="font-weight:bold; font-size:18px; margin-bottom: 8px;" id="res-status"></p>
-                <p style="font-size:14px; color: var(--text-secondary);">Guru Pengampu: Gusty Lazuardi S.T., Gr.</p>
+                <p style="font-weight:bold; font-size:16px; margin-bottom: 8px;" id="res-status"></p>
+                <p style="font-size:12px; color: var(--text-secondary);">Guru Pengampu: Gusty Lazuardi S.T., Gr.</p>
 
                 <div class="stamp" id="res-stamp">LULUS</div>
             </div>
 
-            <div class="btn-container" style="justify-content: center; gap: 16px; margin-top: 20px;">
+            <div class="btn-container" style="justify-content: center; flex-wrap: wrap;">
                 <button onclick="downloadScreenshot()">📸 Download Ulang Bukti (PNG)</button>
                 <button class="btn-outline" onclick="location.reload()">🔄 Kembali ke Awal</button>
             </div>
@@ -719,20 +735,37 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// 3. Fungsi Generator Suara Alarm (Web Audio API)
+// 3. Inisialisasi dan Generator Suara Alarm (Web Audio API)
+let audioCtx;
+
+// Fungsi memancing browser untuk mengizinkan audio saat user berinteraksi pertama kali
+function unlockAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
+
+// Pasang pendeteksi klik/sentuh untuk membuka kunci audio
+document.body.addEventListener('click', unlockAudio, { once: true });
+document.body.addEventListener('touchstart', unlockAudio, { once: true });
+
 function playCheatAlarm() {
     try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioCtx) unlockAudio();
+        
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
 
-        // Membuat suara kasar/bising (sirine)
+        // Membuat suara bising sirine
         oscillator.type = 'sawtooth'; 
-        oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime); // Nada tinggi
-        oscillator.frequency.linearRampToValueAtTime(400, audioCtx.currentTime + 0.5); // Turun cepat
+        oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime); 
+        oscillator.frequency.linearRampToValueAtTime(400, audioCtx.currentTime + 0.5); 
 
         gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5); // Durasi 1.5 detik
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5); 
 
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
@@ -740,7 +773,7 @@ function playCheatAlarm() {
         oscillator.start();
         oscillator.stop(audioCtx.currentTime + 1.5);
     } catch (e) {
-        console.log("Browser tidak mendukung Web Audio API");
+        console.log("Audio diblokir oleh browser:", e);
     }
 }
 
@@ -758,19 +791,27 @@ document.addEventListener("visibilitychange", () => {
         cheatCount++;
     }
     
-    // Ketika siswa kembali ke layar ujian, bunyikan alarm dan tampilkan pesan
+    // Ketika siswa kembali ke layar ujian, bunyikan alarm
     if (document.visibilityState === "visible" && isQuizActive && cheatCount > 0) {
-        playCheatAlarm(); // Bunyikan alarm sirine
         
-        if(cheatCount >= 3) {
-            alert(`🚨 PERINGATAN PELANGGARAN BERAT! 🚨\n\nAnda telah keluar dari aplikasi/browser sebanyak ${cheatCount} kali.\nIni adalah batas maksimal pelanggaran!\n\nSistem akan mengirim dan mengunci jawaban Anda secara otomatis sekarang juga.`);
-            processSubmission(true); // Paksa kirim jawaban
-        } else {
-            alert(`⚠️ PERINGATAN KEAMANAN TERDETEKSI! ⚠️\n\nAnda terdeteksi menekan tombol Home, keluar dari halaman ujian, atau membuka layar lain.\n\nPeringatan ke-${cheatCount} dari maksimal 3 kali pelanggaran. Jika mencapai 3 kali, ujian akan langsung dihentikan!`);
+        // Memastikan konteks audio terbangun kembali
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
         }
+        
+        playCheatAlarm(); 
+        
+        // Diberi jeda agar sistem audio ter-trigger sebelum alert nge-freeze browser
+        setTimeout(() => {
+            if(cheatCount >= 3) {
+                alert(`🚨 PERINGATAN PELANGGARAN BERAT! 🚨\n\nAnda telah keluar dari aplikasi/browser sebanyak ${cheatCount} kali.\nIni adalah batas maksimal pelanggaran!\n\nSistem akan mengirim dan mengunci jawaban Anda secara otomatis sekarang juga.`);
+                processSubmission(true); // Paksa submit
+            } else {
+                alert(`⚠️ PERINGATAN KEAMANAN TERDETEKSI! ⚠️\n\nAnda terdeteksi menekan tombol Home, keluar dari halaman ujian, atau membuka layar lain.\n\nPeringatan ke-${cheatCount} dari maksimal 3 kali pelanggaran. Jika mencapai 3 kali, ujian akan langsung dihentikan!`);
+            }
+        }, 100);
     }
 });
-
 
 /* =========================================
    DATA SOAL (Single & Complex)
@@ -911,7 +952,7 @@ function jumpToQuestion(qId) {
         setTimeout(() => { targetElement.style.border = '1px solid var(--border-color)'; }, 1500);
     }
     
-    if(window.innerWidth <= 800) {
+    if(window.innerWidth <= 1024) {
         document.getElementById('sidebar').classList.remove('show');
     }
 }
@@ -1055,7 +1096,8 @@ function processSubmission(force = false) {
     const statusEl = document.getElementById('res-status');
     const stampEl = document.getElementById('res-stamp');
     
-    if(totalScore >= 75) {
+    // Perbaikan Nilai KKM menjadi 70
+    if(totalScore >= 70) {
         statusEl.innerText = "Selamat! Anda memenuhi KKM.";
         statusEl.style.color = "var(--success)";
         stampEl.innerText = "LULUS";
@@ -1075,7 +1117,6 @@ function processSubmission(force = false) {
     document.getElementById('progress-wrapper').style.display = 'none';
     document.getElementById('result-section').style.display = 'block';
     
-    // Perbaikan Bug Screenshot: Pastikan posisi scroll ada di paling atas
     window.scrollTo({ top: 0, behavior: 'instant' });
 
     showToast("Memproses hasil & mendownload sertifikat...");
@@ -1090,23 +1131,27 @@ function downloadScreenshot(studentName = null) {
         studentName = document.getElementById('res-nama').innerText;
     }
     
-    // Perbaikan Konfigurasi html2canvas untuk web hosting / GitHub
     html2canvas(card, { 
         scale: 2,
-        useCORS: true,
-        allowTaint: true,          // Mengizinkan render gambar beda asal (CORS issue fix)
-        backgroundColor: '#ffffff' // Memaksa background menjadi putih agar tidak kosong/hitam
+        useCORS: true, 
+        backgroundColor: '#ffffff', // Background putih solid fix issue metalik gradient
+        logging: false
     }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        
-        let safeName = studentName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-        let dateStr = new Date().toISOString().slice(0,10);
-        link.download = `Hasil_SK_${safeName}_${dateStr}.png`;
-        link.href = imgData;
-        link.click();
-        
-        showToast("Bukti nilai berhasil di-download!");
+        try {
+            const imgData = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            
+            let safeName = studentName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+            let dateStr = new Date().toISOString().slice(0,10);
+            link.download = `Hasil_SK_${safeName}_${dateStr}.png`;
+            link.href = imgData;
+            link.click();
+            
+            showToast("Bukti nilai berhasil di-download!");
+        } catch (e) {
+            console.error("CORS Error saat konversi kanvas:", e);
+            showToast("Gagal men-download karena limitasi keamanan browser lokal.");
+        }
     }).catch(err => {
         console.error("Screenshot error:", err);
         showToast("Gagal mengambil screenshot otomatis.");
