@@ -360,30 +360,35 @@
             margin-bottom: 4px;
             font-weight: 500;
         }
+        
+        /* PERBAIKAN BUG ANGKA HILANG DI HTML2CANVAS */
         .score-box {
             background: var(--primary);
-            color: white;
+            color: #ffffff;
             padding: 24px;
             border-radius: 12px;
             display: inline-block;
             margin-bottom: 24px;
             min-width: 200px;
+            font-family: Arial, sans-serif !important; /* Paksa pakai Arial */
         }
-        /* PERBAIKAN: Mengganti tag font kustom h2 dengan class div standar web-safe Arial */
         .angka-nilai {
-            font-size: 64px;
-            font-weight: 700;
-            margin: 0 0 5px 0;
-            line-height: 1.2;
-            font-family: Arial, Helvetica, sans-serif;
-            display: block;
+            font-size: 65px !important;
+            font-weight: bold !important;
+            font-family: Arial, sans-serif !important; /* Paksa pakai Arial */
+            margin: 0 0 5px 0 !important;
+            line-height: 65px !important; /* Tinggi kotak yang solid mencegah pemotongan */
+            height: 65px !important;
+            display: block !important;
             text-align: center;
         }
         .score-box span {
             font-size: 14px;
+            font-family: Arial, sans-serif !important;
             opacity: 0.9;
             display: block;
         }
+        
         .details-box {
             display: flex;
             justify-content: space-around;
@@ -627,7 +632,7 @@
                     <!-- Garis Ganda Kop Surat -->
                     <hr class="kop-garis">
                     
-                    <h1 class="title" style="text-align: center; margin-bottom: 15px;">ULANGAN HARIAN</h1>
+                    <h1 class="title" style="text-align: center; margin-bottom: 15px;">Ulangan Harian</h1>
                     <p class="subtitle"><strong>Mata Pelajaran:</strong> Informatika - Sistem Komputer</p>
                     <p class="subtitle"><strong>Guru Pengampu:</strong> Gusty Lazuardi S.T., Gr.</p>
                     <hr style="margin: 12px 0;">
@@ -643,10 +648,15 @@
                     </div>
                     <div class="form-group">
                         <label class="required" for="kelas">Kelas</label>
+                        <!-- Penambahan Data Kelas -->
                         <select id="kelas" name="kelas" required>
                             <option value="" disabled selected>Pilih Kelas</option>
-                            <option value="X TKJ 1">X TKJ</option>
+                            <option value="X TKJ">X TKJ</option>
                             <option value="X BD">X BD</option>
+                            <option value="XI TKJ">XI TKJ</option>
+                            <option value="XI BD">XI BD</option>
+                            <option value="XII TKJ">XII TKJ</option>
+                            <option value="XII BD">XII BD</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -679,7 +689,6 @@
                 </div>
 
                 <div class="score-box">
-                    <!-- PERBAIKAN: Mengganti h2 menjadi div dan menerapkan class khusus bebas bug font -->
                     <div class="angka-nilai" id="res-score">0</div>
                     <span>NILAI AKHIR / 100</span>
                 </div>
@@ -1125,7 +1134,7 @@ function downloadScreenshot(studentName = null) {
     html2canvas(card, { 
         scale: 2,
         useCORS: true, 
-        backgroundColor: '#ffffff',
+        backgroundColor: '#ffffff', // Background putih solid fix issue metalik gradient
         logging: false
     }).then(canvas => {
         try {
