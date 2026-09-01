@@ -361,33 +361,42 @@
             font-weight: 500;
         }
         
-        /* PERBAIKAN BUG ANGKA HILANG DI HTML2CANVAS */
+        /* ======== PERBAIKAN TOTAL BUG ANGKA html2canvas ======== */
         .score-box {
-            background: var(--primary);
-            color: #ffffff;
+            /* Fix Bug Warna: Jangan gunakan var(--primary), gunakan Hex langsung */
+            background-color: #673ab7 !important; 
             padding: 24px;
             border-radius: 12px;
             display: inline-block;
             margin-bottom: 24px;
             min-width: 200px;
-            font-family: Arial, sans-serif !important; /* Paksa pakai Arial */
+            /* Fix Bug Layer: Paksa kotak ini ada di bawah angka */
+            position: relative;
+            z-index: 1;
         }
         .angka-nilai {
-            font-size: 65px !important;
+            /* Fix Bug Teks Terpotong: Jangan gunakan height/line-height kaku, gunakan normal */
+            font-size: 64px !important;
             font-weight: bold !important;
-            font-family: Arial, sans-serif !important; /* Paksa pakai Arial */
+            font-family: Arial, Helvetica, sans-serif !important;
+            color: #ffffff !important;
             margin: 0 0 5px 0 !important;
-            line-height: 65px !important; /* Tinggi kotak yang solid mencegah pemotongan */
-            height: 65px !important;
-            display: block !important;
+            display: block;
             text-align: center;
+            /* Fix Bug Tertumpuk: Paksa angka muncul paling depan */
+            position: relative;
+            z-index: 10;
         }
         .score-box span {
             font-size: 14px;
-            font-family: Arial, sans-serif !important;
+            color: #ffffff !important;
+            font-family: Arial, Helvetica, sans-serif !important;
             opacity: 0.9;
             display: block;
+            position: relative;
+            z-index: 10;
         }
+        /* ======================================================== */
         
         .details-box {
             display: flex;
@@ -648,7 +657,7 @@
                     </div>
                     <div class="form-group">
                         <label class="required" for="kelas">Kelas</label>
-                        <!-- Penambahan Data Kelas -->
+                        <!-- Penambahan List Kelas Sesuai Permintaan -->
                         <select id="kelas" name="kelas" required>
                             <option value="" disabled selected>Pilih Kelas</option>
                             <option value="X TKJ">X TKJ</option>
