@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kunci Jawaban & Pembahasan - Sistem Komputer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        /* Modal Keamanan (Layar Kunci) */
+        #security-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #673ab7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+        .login-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+        }
+        .login-box h2 {
+            margin-top: 0;
+            color: #673ab7;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .login-box button {
+            background: #673ab7;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+        .login-box button:hover {
+            background: #512da8;
+        }
+        .error-msg {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Desain Kertas A4 Dokumen Pembahasan */
+        #main-content {
+            display: none;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            position: relative;
+        }
+        .doc-header {
+            text-align: center;
+            border-bottom: 3px solid #000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .doc-header h1 {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+        }
+        .info-table {
+            width: 100%;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .info-table td {
+            padding: 5px 0;
+        }
+        
+        .section-title {
+            background: #673ab7;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 30px 0 20px 0;
+        }
+
+        .qa-block {
+            margin-bottom: 25px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #673ab7;
+            border-radius: 0 4px 4px 0;
+            page-break-inside: avoid; /* Mencegah soal terpotong saat diprint */
+        }
+        .question {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+        .answer {
+            color: #1e8e3e;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .explanation {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            margin: 0;
+        }
+
+        /* Tombol Cetak PDF */
+        .btn-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #d93025;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s, background 0.3s;
+            z-index: 1000;
+        }
+        .btn-print:hover {
+            background: #b31b12;
+            transform: scale(1.05);
+        }
+
+        /* Print Styles: Modifikasi saat dicetak ke PDF */
+        @media print {
+            body { background: #fff; padding: 0; }
+            #main-content { box-shadow: none; padding: 0; max-width: 100%; }
+            #security-overlay, .btn-print { display: none !important; }
+            .qa-block { background: transparent; border-left: 2px solid #000; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+            .section-title { background: #eee; color: #000; border: 1px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- OVERLAY KEAMANAN -->
+    <div id="security-overlay">
+        <div class="login-box">
+            <h2>🔒 Area Guru</h2>
+            <p style="font-size: 14px; color: #666;">Masukkan PIN untuk membuka dokumen pembahasan.</p>
+            <input type="password" id="pin-input" placeholder="*** PIN ***">
+            <button onclick="verifyPin()">Buka Dokumen</button>
+            <div id="error-msg" class="error-msg">PIN salah! Akses ditolak.</div>
+        </div>
+    </div>
+
+    <!-- KONTEN PEMBAHASAN -->
+    <div id="main-content">
+        <!-- Tombol Cetak -->
+        <button class="btn-print" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+
+        <div class="doc-header">
+            <h1>Kunci Jawaban & Pembahasan Detail</h1>
+            <h2>Ulangan Harian - Sistem Komputer</h2>
+        </div>
+        
+        <table class="info-table">
+            <tr>
+                <td width="150">Sekolah</td>
+                <td>: SMK Choiriyah Lumajang</td>
+            </tr>
+            <tr>
+                <td>Guru Pengampu</td>
+                <td>: Gusty Lazuardi S.T., Gr.</td>
+            </tr>
+            <tr>
+                <td>Materi</td>
+                <td>: Hardware, Software, Brainware, & Arsitektur CPU</td>
+            </tr>
+        </table>
+        
+        <hr style="margin-bottom: 30px;">
+
+        <h3 class="section-title">BAGIAN 1: Pilihan Ganda Tunggal (Soal 1 - 50)</h3>
+
+        <!-- SOAL 1-40 -->
+        <div class="qa-block">
+            <div class="question">1. Komponen utama sistem komputer yang bertindak sebagai pusat pengendali dan pemroses seluruh instruksi data adalah...</div>
+            <div class="answer">Kunci Jawaban: Central Processing Unit (CPU)</div>
+            <p class="explanation">Pembahasan: CPU atau prosesor diibaratkan sebagai "otak" dari komputer. Semua perhitungan aritmatika, logika, serta kontrol aliran data antar komponen perangkat keras diproses di dalam CPU.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">2. Perangkat keras masukan (input device) yang bekerja dengan memindai dokumen fisik menjadi data digital adalah...</div>
+            <div class="answer">Kunci Jawaban: Scanner</div>
+            <p class="explanation">Pembahasan: Scanner memiliki sensor cahaya yang menangkap pantulan gambar atau teks dari dokumen fisik, lalu mengonversinya menjadi format file digital.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">3. Jenis memori utama yang bersifat 'volatile' (data hilang saat listrik mati) adalah...</div>
+            <div class="answer">Kunci Jawaban: RAM</div>
+            <p class="explanation">Pembahasan: RAM (Random Access Memory) menyimpan data instruksi secara sementara. Karena bersifat volatile, saat daya hilang, seluruh data terhapus.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">4. Media penyimpanan sekunder berbasis chip semikonduktor tanpa komponen bergerak yang menawarkan kecepatan tinggi adalah...</div>
+            <div class="answer">Kunci Jawaban: Solid State Drive (SSD)</div>
+            <p class="explanation">Pembahasan: SSD menggunakan chip NAND flash memory. Ketiadaan komponen mekanis membuat SSD lebih cepat dan tahan guncangan dibanding HDD.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">5. Port pada motherboard yang secara khusus digunakan untuk memasang kartu grafis (VGA Card) modern adalah...</div>
+            <div class="answer">Kunci Jawaban: PCIe x16</div>
+            <p class="explanation">Pembahasan: Peripheral Component Interconnect Express (PCIe) slot x16 memiliki bandwidth terbesar, khusus untuk transfer data grafis dari VGA/GPU.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">6. Perangkat keluaran (output device) yang digunakan untuk mencetak cetak biru (blueprint) atau gambar teknis ukuran besar adalah...</div>
+            <div class="answer">Kunci Jawaban: Plotter</div>
+            <p class="explanation">Pembahasan: Plotter adalah printer khusus untuk menggambar garis vektor presisi tinggi pada media besar seperti spanduk atau blueprint arsitektur.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">7. Papan sirkuit utama yang menghubungkan seluruh komponen internal komputer satu sama lain disebut...</div>
+            <div class="answer">Kunci Jawaban: Motherboard</div>
+            <p class="explanation">Pembahasan: Motherboard menyediakan konektivitas kelistrikan dan jalur bus agar komponen (CPU, RAM, dll) dapat berinteraksi.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">8. Perangkat keras masukan yang biasa digunakan oleh desainer grafis untuk menggambar secara presisi dengan stylus adalah...</div>
+            <div class="answer">Kunci Jawaban: Graphics Tablet (Digitizer)</div>
+            <p class="explanation">Pembahasan: Alat ini menangkap tekanan stylus dan menerjemahkannya ke goresan digital pada layar.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">9. Komponen power supply yang berfungsi merubah arus listrik AC dari stopkontak menjadi arus DC untuk motherboard adalah...</div>
+            <div class="answer">Kunci Jawaban: Rectifier / Transformer</div>
+            <p class="explanation">Pembahasan: Rectifier (penyearah) di dalam PSU mengubah arus PLN (AC) menjadi arus searah (DC) yang dibutuhkan komputer.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">10. Teknologi port mentransfer data, sinyal video, dan daya listrik sekaligus dalam satu kabel kecil simetris adalah...</div>
+            <div class="answer">Kunci Jawaban: USB Type-C (Thunderbolt)</div>
+            <p class="explanation">Pembahasan: USB Type-C (khususnya Thunderbolt) mendukung Power Delivery dan DisplayPort Alt Mode dalam satu kabel simetris.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">11. Memori non-volatile berbasis ROM yang digunakan untuk menyimpan instruksi awal booting dasar sistem komputer adalah...</div>
+            <div class="answer">Kunci Jawaban: BIOS / UEFI Chip</div>
+            <p class="explanation">Pembahasan: BIOS/UEFI di dalam ROM mengeksekusi POST dan memuat bootloader OS saat komputer dinyalakan.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">12. Perangkat keras yang berfungsi mendinginkan CPU secara langsung melalui hembusan udara atau cairan pendingin adalah...</div>
+            <div class="answer">Kunci Jawaban: Cooler CPU (Heatsink & Fan)</div>
+            <p class="explanation">Pembahasan: Menggunakan balok logam (heatsink) penyerap panas dan kipas (fan) untuk membuang panas dari prosesor.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">13. Berikut ini yang termasuk perangkat penyimpanan optik adalah...</div>
+            <div class="answer">Kunci Jawaban: Blu-ray Disc</div>
+            <p class="explanation">Pembahasan: Menggunakan sinar laser untuk membaca data. Standar Blu-ray jauh lebih besar kapasitasnya dibanding CD/DVD.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">14. Sistem operasi tergolong ke dalam kelompok perangkat lunak kategori...</div>
+            <div class="answer">Kunci Jawaban: System Software</div>
+            <p class="explanation">Pembahasan: System software adalah program inti yang mengelola hardware agar perangkat lunak aplikasi dapat berjalan.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">15. Sistem operasi open-source berbasis kernel bebas yang dikembangkan oleh Linus Torvalds adalah...</div>
+            <div class="answer">Kunci Jawaban: Linux</div>
+            <p class="explanation">Pembahasan: Dirilis tahun 1991, Linux bersifat open-source dan melahirkan banyak distro (Ubuntu, CentOS).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">16. Perangkat lunak yang berfungsi menjembatani komunikasi antara sistem operasi dan hardware tertentu disebut...</div>
+            <div class="answer">Kunci Jawaban: Driver</div>
+            <p class="explanation">Pembahasan: Device driver adalah penerjemah agar OS mengenali dan bisa memerintah perangkat keras keras spesifik.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">17. Jenis lisensi perangkat lunak yang dapat digunakan secara gratis untuk jangka waktu percobaan tertentu sebelum membeli adalah...</div>
+            <div class="answer">Kunci Jawaban: Shareware</div>
+            <p class="explanation">Pembahasan: Menawarkan masa uji coba (trial) gratis agar pengguna dapat mengevaluasi fitur sebelum membeli.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">18. Program utilitas bawaan Windows yang berfungsi merapikan susunan fragmen file pada harddisk mekanis adalah...</div>
+            <div class="answer">Kunci Jawaban: Drive Defragmenter</div>
+            <p class="explanation">Pembahasan: Menata ulang blok-blok data yang berserakan (terfragmentasi) di HDD agar berdekatan kembali sehingga pembacaan lebih cepat.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">19. Perangkat lunak yang digunakan untuk menerjemahkan bahasa pemrograman tingkat tinggi langsung baris demi baris saat dieksekusi adalah...</div>
+            <div class="answer">Kunci Jawaban: Interpreter</div>
+            <p class="explanation">Pembahasan: Berbeda dari compiler yang menerjemahkan seluruhnya sekaligus, interpreter mengeksekusi script baris demi baris secara langsung.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">20. Contoh aplikasi yang tergolong dalam Spreadsheet (Pengolah Angka) adalah...</div>
+            <div class="answer">Kunci Jawaban: Microsoft Excel</div>
+            <p class="explanation">Pembahasan: Menggunakan grid sel (baris & kolom) untuk mencatat, menghitung, dan memanipulasi angka (contoh: Excel, Google Sheets).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">21. Perangkat lunak jahat yang menyandera data pengguna dengan cara mengenkripsinya lalu meminta tebusan adalah...</div>
+            <div class="answer">Kunci Jawaban: Ransomware</div>
+            <p class="explanation">Pembahasan: Malware yang mengunci file penting dan memeras korban dengan meminta tebusan (uang kripto) untuk kunci dekripsinya.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">22. Perangkat lunak firmware modern pengganti BIOS lama yang mendukung booting cepat dan kapasitas drive di atas 2.2 TB adalah...</div>
+            <div class="answer">Kunci Jawaban: UEFI</div>
+            <p class="explanation">Pembahasan: Unified Extensible Firmware Interface, memiliki GUI, mendukung mouse, dan format partisi GPT skala besar.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">23. Lisensi perangkat lunak bebas yang mewajibkan kode sumber turunan untuk tetap bersifat terbuka/bebas adalah...</div>
+            <div class="answer">Kunci Jawaban: GNU General Public License (GPL)</div>
+            <p class="explanation">Pembahasan: Lisensi berkonsep copyleft yang mewajibkan setiap turunan karyanya tetap didistribusikan secara open-source bebas.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">24. Aplikasi virtualisasi yang memungkinkan pengguna menjalankan beberapa sistem operasi secara bersamaan di atas OS utama adalah...</div>
+            <div class="answer">Kunci Jawaban: Oracle VirtualBox</div>
+            <p class="explanation">Pembahasan: Merupakan hypervisor yang bisa menjalankan OS tamu (Guest) di dalam jendela OS utama (Host).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">25. Program aplikasi yang digunakan khusus untuk mengelola, menyimpan, dan memanipulasi basis data berukuran besar adalah...</div>
+            <div class="answer">Kunci Jawaban: DBMS (Database Management System)</div>
+            <p class="explanation">Pembahasan: Perangkat lunak khusus database (seperti MySQL, SQL Server) untuk mengelola data terstruktur dengan efisien.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">26. Profesi brainware yang bertugas merancang, menganalisis, dan memetakan kebutuhan sistem informasi sebelum dibuat aplikasi adalah...</div>
+            <div class="answer">Kunci Jawaban: System Analyst</div>
+            <p class="explanation">Pembahasan: Bertindak membuat blueprint (cetak biru) arsitektur sistem dengan menerjemahkan kebutuhan klien sebelum dieksekusi programmer.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">27. Personel yang bertugas menulis baris kode program berdasarkan rancangan desain sistem dinamakan...</div>
+            <div class="answer">Kunci Jawaban: Programmer</div>
+            <p class="explanation">Pembahasan: Menguasai bahasa pemrograman (coding) untuk mewujudkan desain analisis sistem menjadi aplikasi nyata.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">28. Tingkatan brainware yang bertanggung menjaga keamanan, keandalan, dan kelancaran jaringan komputer organisasi adalah...</div>
+            <div class="answer">Kunci Jawaban: Network Administrator</div>
+            <p class="explanation">Pembahasan: Spesialis yang mengatur konektivitas, router, server lokal, serta mengawasi keamanan lalu lintas internet perusahaan.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">29. Pengguna komputer biasa yang menggunakan aplikasi untuk menyelesaikan pekerjaan harian tanpa mengubah sistem dinamakan...</div>
+            <div class="answer">Kunci Jawaban: End User / Operator</div>
+            <p class="explanation">Pembahasan: Operator tidak memprogram ulang sistem, hanya memakai fungsi aplikasi yang sudah jadi (misal: Kasir).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">30. Spesialis brainware yang bertugas mengelola integritas, keamanan, cadangan, dan struktur basis data perusahaan adalah...</div>
+            <div class="answer">Kunci Jawaban: Database Administrator (DBA)</div>
+            <p class="explanation">Pembahasan: DBA menjaga ketersediaan (uptime), mengoptimasi kueri data besar, serta mengelola akses user pada database server.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">31. Profesi IT yang berfokus pada pengujian kualitas lunak (mencari bug dan cacat sistem) sebelum dirilis adalah...</div>
+            <div class="answer">Kunci Jawaban: Quality Assurance (QA) Tester</div>
+            <p class="explanation">Pembahasan: Mencari kecacatan (bug) dalam skenario penggunaan ekstrem agar aplikasi aman rilis ke publik.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">32. Pihak yang memimpin seluruh jalannya proyek pengembangan perangkat lunak dari perencanaan hingga serah terima adalah...</div>
+            <div class="answer">Kunci Jawaban: Project Manager</div>
+            <p class="explanation">Pembahasan: Mengatur jadwal, timeline (sprint), sumber daya tim developer, dan menjaga komunikasi dengan klien utama.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">33. Teknisi yang bertugas merawat, memperbaiki, dan merakit perangkat keras komputer yang rusak dinamakan...</div>
+            <div class="answer">Kunci Jawaban: Teknisi Komputer / Hardware Technician</div>
+            <p class="explanation">Pembahasan: Berhubungan dengan perangkat keras fisik, seperti menyolder, mengganti part rusak, atau melakukan perakitan ulang komponen.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">34. Spesialis yang bertugas merancang antarmuka serta pengalaman kenyamanan pengguna dalam menggunakan aplikasi adalah...</div>
+            <div class="answer">Kunci Jawaban: UI/UX Designer</div>
+            <p class="explanation">Pembahasan: Memastikan tata letak tombol estetik (UI) sekaligus memudahkan navigasi operasional psikologis pengguna (UX).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">35. Orang yang menyusup ke dalam sistem komputer untuk tujuan menguji dan memperkuat pertahanan keamanan (Ethical) disebut...</div>
+            <div class="answer">Kunci Jawaban: White Hat Hacker / Penetration Tester</div>
+            <p class="explanation">Pembahasan: Hacker baik yang dibayar secara legal untuk mencoba menjebol sistem perusahaan guna menambal celah sebelum diserang peretas jahat.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">36. Petugas yang bertanggung jawab menginput data mentah ke dalam sistem komputer perusahaan secara rutin adalah...</div>
+            <div class="answer">Kunci Jawaban: Data Entry Operator</div>
+            <p class="explanation">Pembahasan: Tenaga yang mengetik atau memasukkan data dokumen kertas secara masif ke dalam sistem basis data komputer.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">37. Jabatan tertinggi dalam manajemen teknologi informasi di sebuah perusahaan yang menentukan arah kebijakan IT adalah...</div>
+            <div class="answer">Kunci Jawaban: Chief Information Officer (CIO) / CTO</div>
+            <p class="explanation">Pembahasan: Pejabat eksekutif (C-Level) yang merancang visi, anggaran besar IT, serta investasi adopsi teknologi jangka panjang perusahaan.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">38. Komponen dalam CPU yang bertanggung jawab melakukan operasi perhitungan aritmatika dan logika dasar adalah...</div>
+            <div class="answer">Kunci Jawaban: Arithmetic Logic Unit (ALU)</div>
+            <p class="explanation">Pembahasan: Bagian sirkuit dari CPU yang mengeksekusi operasi tambah/kurang/kali/bagi serta perbandingan gerbang biner (AND/OR).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">39. Komponen CPU yang bertugas mengatur lalu lintas data, mengkodekan instruksi, dan mengendalikan unit lain adalah...</div>
+            <div class="answer">Kunci Jawaban: Control Unit (CU)</div>
+            <p class="explanation">Pembahasan: Bertindak sebagai "mandor" yang mengambil dan menerjemahkan (decode) instruksi memori lalu mengarahkan unit mana yang harus bekerja.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">40. Register CPU yang berfungsi menyimpan alamat memori dari instruksi berikutnya yang akan dieksekusi dinamakan...</div>
+            <div class="answer">Kunci Jawaban: Program Counter (PC)</div>
+            <p class="explanation">Pembahasan: Register khusus (penunjuk) agar CPU tahu baris perintah mana yang harus dilanjutkan setelah instruksi sebelumnya selesai.</p>
+        </div>
+
+        <!-- SOAL 41-50 -->
+        <div class="qa-block">
+            <div class="question">41. Memori berkecepatan sangat tinggi yang berada di dalam atau dekat inti CPU untuk menyimpan data sementara yang sering diakses adalah...</div>
+            <div class="answer">Kunci Jawaban: Cache Memory</div>
+            <p class="explanation">Pembahasan: Cache dirancang lebih cepat dari RAM untuk menjembatani jurang perbedaan kecepatan aliran data dari memori ke CPU.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">42. Urutan siklus kerja dasar CPU dalam memproses suatu instruksi adalah...</div>
+            <div class="answer">Kunci Jawaban: Fetch -> Decode -> Execute</div>
+            <p class="explanation">Pembahasan: CPU beroperasi mengambil (Fetch) instruksi dari memori, mengurai arti instruksi tersebut (Decode), lalu menjalankannya (Execute).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">43. Register yang digunakan untuk menyimpan hasil sementara dari operasi perhitungan yang dilakukan oleh ALU adalah...</div>
+            <div class="answer">Kunci Jawaban: Accumulator</div>
+            <p class="explanation">Pembahasan: Akumulator berperan menampung data matematika sesaat sebelum atau sesudah ALU melakukan kalkulasi numerik.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">44. Bus sistem yang berfungsi membawa alamat lokasi memori atau I/O yang akan diakses oleh CPU adalah...</div>
+            <div class="answer">Kunci Jawaban: Address Bus</div>
+            <p class="explanation">Pembahasan: Jalur kelistrikan searah yang digunakan prosesor untuk menunjuk/mencari laci lokasi data memori mana yang ingin dibaca/ditulis.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">45. Satuan kecepatan detak gelombang jam internal CPU dalam mengeksekusi instruksi per detik diukur dalam...</div>
+            <div class="answer">Kunci Jawaban: Hertz (GHz)</div>
+            <p class="explanation">Pembahasan: Menunjukkan seberapa banyak siklus yang dapat diselesaikan kristal osilator (Clock) dalam 1 detik. 1 GHz = 1 miliar siklus/detik.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">46. Arsitektur prosesor yang menggunakan kumpulan instruksi sederhana dan berukuran tetap untuk eksekusi sangat cepat adalah...</div>
+            <div class="answer">Kunci Jawaban: RISC</div>
+            <p class="explanation">Pembahasan: Reduced Instruction Set Computing (RISC) yang populer pada smartphone/ARM, unggul karena eksekusinya ringkas dan hemat baterai.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">47. Teknik di mana CPU mengeksekusi beberapa tahap instruksi secara tumpang tindih (overlapping) untuk meningkatkan efisiensi disebut...</div>
+            <div class="answer">Kunci Jawaban: Pipelining</div>
+            <p class="explanation">Pembahasan: Ibarat jalur perakitan pabrik. Selagi instruksi A di-execute, CPU bersamaan melakukan decode untuk instruksi B dan fetch untuk C.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">48. Register CPU yang menampung instruksi yang sedang atau baru saja diambil dari memori utama adalah...</div>
+            <div class="answer">Kunci Jawaban: Instruction Register (IR)</div>
+            <p class="explanation">Pembahasan: Menyimpan secara persis kode perintah biner yang dibawa masuk sebelum dipecah tugasnya oleh Control Unit.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">49. Jenis bus yang bersifat dua arah (bidirectional) untuk lalu lintas mentransfer data antara CPU dan memori adalah...</div>
+            <div class="answer">Kunci Jawaban: Data Bus</div>
+            <p class="explanation">Pembahasan: Jalur Data dapat mengalir dari CPU ke Memori (Write) atau ditarik dari Memori ke CPU (Read).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">50. Teknologi pembuatan CPU yang menggabungkan beberapa unit pemroses (core) independen dalam satu chip fisik tunggal disebut...</div>
+            <div class="answer">Kunci Jawaban: Multi-Core Processor</div>
+            <p class="explanation">Pembahasan: Beberapa otak prosesor fisik (misal: Quad-core, Octa-core) ditanam pada sekeping silikon mati untuk memperlancar kemampuan Multitasking.</p>
+        </div>
+
+        <h3 class="section-title">BAGIAN 2: Pilihan Ganda Kompleks (Soal 51 - 100)</h3>
+
+        <!-- SOAL 51-100 -->
+        <div class="qa-block">
+            <div class="question">51. Manakah di antara perangkat berikut yang tergolong ke dalam perangkat masukan (input device)?</div>
+            <div class="answer">Kunci Jawaban: Barcode Scanner, Graphics Tablet, Touchscreen</div>
+            <p class="explanation">Pembahasan: Ketiga perangkat tersebut berfungsi "memasukkan" sinyal/data (kode bar, tekanan pena, sentuhan jari) dari pengguna ke sistem komputer.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">52. Pilihlah perangkat lunak/keras yang berfungsi sebagai media penyimpanan data non-volatile!</div>
+            <div class="answer">Kunci Jawaban: NVMe SSD, Harddisk External, Flashdrive USB</div>
+            <p class="explanation">Pembahasan: Media non-volatile adalah penyimpan data permanen yang tidak hilang datanya walaupun tidak dialiri listrik/komputer dimatikan.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">53. Berikut ini yang termasuk dalam kelompok perangkat keluaran (output device) adalah...</div>
+            <div class="answer">Kunci Jawaban: Monitor OLED, Speaker Active, Projector LCD</div>
+            <p class="explanation">Pembahasan: Output device menghasilkan bentuk final terjemahan data komputer untuk dilihat (Monitor/Proyektor) atau didengar (Speaker) oleh manusia.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">54. Komponen manakah yang terpasang langsung pada Motherboard komputer?</div>
+            <div class="answer">Kunci Jawaban: Prosesor (CPU), RAM Module, Expansion Card (VGA)</div>
+            <p class="explanation">Pembahasan: Ketiga komponen ini dipasang menancap secara langsung pada slot soket internal motherboard di dalam casing PC.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">55. Perangkat keras mana saja yang berhubungan langsung dengan pemrosesan sinyal grafis dan tampilan visual?</div>
+            <div class="answer">Kunci Jawaban: GPU (Graphics Processing Unit), VRAM, DisplayPort Cable</div>
+            <p class="explanation">Pembahasan: Rantai sistem visual komputer melibatkan prosesor grafis (GPU), memorinya (VRAM), dan kabel penyalur (DisplayPort) menuju layar.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">56. Manakah jenis konektor/port berikut yang digunakan untuk mentransfer data daya atau sinyal ke monitor?</div>
+            <div class="answer">Kunci Jawaban: HDMI, DisplayPort, VGA</div>
+            <p class="explanation">Pembahasan: Ketiga antarmuka ini dirancang murni untuk menghantarkan gambar display layar dari kartu grafis ke monitor/proyektor.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">57. Manakah ciri-ciri utama dari memori RAM pada komputer?</div>
+            <div class="answer">Kunci Jawaban: Bersifat Volatile, Kecepatan akses lebih tinggi dari Harddisk, Penyimpanan sementara program berjalan</div>
+            <p class="explanation">Pembahasan: RAM (memori sistem) harus sangat cepat agar prosesor tidak nganggur, namun risikonya data bersifat sementara selama listrik hidup.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">58. Berikut ini yang merupakan contoh media penyimpanan berbasis teknologi Flash Memory adalah...</div>
+            <div class="answer">Kunci Jawaban: Micro SD Card, SSD NVMe, USB Flashdrive</div>
+            <p class="explanation">Pembahasan: Flash memory menahan data elektronik di dalam sel IC tanpa putaran disk mekanis sehingga senyap dan cepat.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">59. Perangkat manakah yang memiliki fungsi ganda sebagai Input sekaligus Output (Hybrid Device)?</div>
+            <div class="answer">Kunci Jawaban: Layar Sentuh (Touchscreen), Headset (Headphone + Mic), Printer Multifungsi (Scan/Print)</div>
+            <p class="explanation">Pembahasan: Sentuhan=Input/Layar=Output; Mic=Input/Speaker=Output; Scanner=Input/Printer=Output.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">60. Faktor apa saja yang mempengaruhi performa kecepatan suatu Harddisk Mekanis (HDD)?</div>
+            <div class="answer">Kunci Jawaban: Kecepatan Putaran Spindle (RPM), Kapasitas Cache Buffer, Jenis Antarmuka Bus (SATA 3)</div>
+            <p class="explanation">Pembahasan: Semakin tinggi RPM rotasi piringan magnetik (misal 7200 RPM) dan cache sementaranya, semakin ngebut HDD tersebut membaca data.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">61. Perangkat jaringan mana yang tergolong perangkat keras pendukung sistem komputer?</div>
+            <div class="answer">Kunci Jawaban: Network Interface Card (NIC), Router, Switch Hub</div>
+            <p class="explanation">Pembahasan: NIC sebagai kartu antarmuka fisik di dalam PC, Router mengarahkan rute IP, dan Switch membagi port kabel LAN lokal.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">62. Manakah komponen yang berperan penting dalam menjaga suhu aman operasional komponen komputer?</div>
+            <div class="answer">Kunci Jawaban: Heatsink Aluminium, Thermal Paste, Kipas Casing (Case Fan), Liquid Cooling Radiator</div>
+            <p class="explanation">Pembahasan: Thermal paste menambal pori agar rambatan panas mulus menuju Heatsink/Radiator air untuk didinginkan kipas.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">63. Sebutkan jenis-jenis printer berdasarkan teknologi cetaknya!</div>
+            <div class="answer">Kunci Jawaban: Dot Matrix, Inkjet, LaserJet, Thermal</div>
+            <p class="explanation">Pembahasan: Dot Matrix (pita ketuk), Inkjet (tinta semprot), LaserJet (serbuk laser magnet), dan Thermal (kertas pemanas nota kasir).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">64. Manakah di antara sistem operasi berikut yang tergolong dalam kategori Open Source?</div>
+            <div class="answer">Kunci Jawaban: Ubuntu Linux, Fedora, Debian</div>
+            <p class="explanation">Pembahasan: Ketiganya adalah turunan distro ekosistem kernel Linux yang kode intinya gratis dibedah atau diubah oleh komunitas publik.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">65. Berikut ini yang merupakan contoh perangkat lunak program utilitas (Utility Software) adalah...</div>
+            <div class="answer">Kunci Jawaban: Antivirus (Kaspersky), WinRAR / 7-Zip, Disk Defragmenter</div>
+            <p class="explanation">Pembahasan: Utilitas adalah software rawat jalan sistem, fungsinya spesifik untuk manajemen kompresi, perawatan disk, atau tameng keamanan.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">66. Manakah tugas utama dari sebuah Sistem Operasi (Operating System)?</div>
+            <div class="answer">Kunci Jawaban: Manajemen Memori Utama, Manajemen File & Berkas, Manajemen Prosesor / Task, Manajemen Perangkat I/O</div>
+            <p class="explanation">Pembahasan: OS adalah "pengatur jalan tol" bagi seluruh alokasi ruang memori, folder file, antrean proses CPU, serta perintah device input/output perangkat.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">67. Pilihlah aplikasi yang masuk dalam kelompok Web Browser!</div>
+            <div class="answer">Kunci Jawaban: Google Chrome, Mozilla Firefox, Microsoft Edge, Brave Browser</div>
+            <p class="explanation">Pembahasan: Program aplikasi khusus yang merender bahasa HTML dan script internet untuk berselancar di World Wide Web.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">68. Berikut ini yang merupakan contoh Perangkat Lunak Aplikasi (Application Software) adalah...</div>
+            <div class="answer">Kunci Jawaban: Adobe Illustrator, VLC Media Player, Microsoft PowerPoint</div>
+            <p class="explanation">Pembahasan: Aplikasi adalah program yang berjalan setelah OS nyala, untuk menyelesaikan spesifik pekerjaan produktif manusia tertentu.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">69. Manakah karakteristik utama dari Perangkat Lunak Berbayar / Commercial Software (Proprietary)?</div>
+            <div class="answer">Kunci Jawaban: Kode sumber ditutup (Closed Source), Memiliki hak cipta yang dilindungi, Pengguna harus membeli lisensi</div>
+            <p class="explanation">Pembahasan: Program komersial (contoh: Microsoft Windows) tidak mengizinkan kodenya diotak-atik karena memiliki entitas perlindungan profit developer secara legal.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">70. Manakah aplikasi perkantoran yang berfungsi untuk pengolahan kata (Word Processor)?</div>
+            <div class="answer">Kunci Jawaban: Microsoft Word, Google Docs, LibreOffice Writer, WPS Writer</div>
+            <p class="explanation">Pembahasan: Kumpulan aplikasi yang didesain dengan format blanko halaman putih (WYSIWYG) khusus untuk tata ketik persuratan atau laporan dokumen.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">71. Manakah contoh ancaman perangkat lunak berbahaya (Malware)?</div>
+            <div class="answer">Kunci Jawaban: Virus, Trojan Horse, Ransomware, Spyware</div>
+            <p class="explanation">Pembahasan: Semuanya adalah kategori Malicious Software; baik merusak sistem murni (virus) hingga pencurian intelijen secara siluman (spyware).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">72. Bahasa pemrograman manakah yang tergolong dalam bahasa pemrograman tingkat tinggi (High-Level Language)?</div>
+            <div class="answer">Kunci Jawaban: Python, Java, C++</div>
+            <p class="explanation">Pembahasan: Level tinggi berarti bahasa syntax kodenya mirip bahasa Inggris manusia sehingga sangat mudah diketik programmer dibanding machine biner.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">73. Manakah jenis format berkas gambar berskala vektor maupun bitmap yang umum digunakan?</div>
+            <div class="answer">Kunci Jawaban: PNG, JPEG, SVG</div>
+            <p class="explanation">Pembahasan: Ekstensi raster untuk foto solid padat (PNG transparan, JPG) serta basis desain vektor ringan dinamis tak pecah (SVG).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">74. Manakah yang termasuk fungsi firmware dalam komputer?</div>
+            <div class="answer">Kunci Jawaban: Inisialisasi perangkat keras saat POST, Memuat bootloader sistem operasi, Menyediakan konfigurasi hardware dasar</div>
+            <p class="explanation">Pembahasan: Perangkat lunak permanen cip motherboard (BIOS) bertugas mengontrol kelistrikan part sangat dasar sebelum memanggil Windows/OS.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">75. Sistem operasi seluler (Mobile OS) yang populer digunakan saat ini adalah...</div>
+            <div class="answer">Kunci Jawaban: Android OS, Apple iOS, HarmonyOS</div>
+            <p class="explanation">Pembahasan: Raksasa kernel operasi genggam yang diperuntukkan bagi sistem sentuh tablet maupun smartphone modern zaman sekarang.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">76. Tugas-tugas yang menjadi tanggung jawab seorang Network Administrator meliputi...</div>
+            <div class="answer">Kunci Jawaban: Konfigurasi Router dan Switch, Monitoring lalu lintas jaringan, Mengatur hak akses dan keamanan jaringan</div>
+            <p class="explanation">Pembahasan: Tim Network murni bermain logika di belakang layar kabel server atau transmisi, tanpa bersinggungan langsung dengan pembuatan aplikasi UI.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">77. Manakah profesi IT yang berfokus pada tahapan pembangunan dan pembuatan kode aplikasi (Development)?</div>
+            <div class="answer">Kunci Jawaban: Front-end Developer, Back-end Developer, Full-stack Developer</div>
+            <p class="explanation">Pembahasan: Posisi arsitek tulisan pemrograman. "Front" pada visual, "Back" pada kerangka koneksi fungsi, atau "Full" yang menguasai keduanya sekaligus.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">78. Apa saja kemampuan mendasar yang wajib dimiliki oleh seorang System Analyst?</div>
+            <div class="answer">Kunci Jawaban: Pemahaman alur bisnis organisasi, Kemampuan pemodelan sistem (UML/DFD), Komunikasi & analisis masalah</div>
+            <p class="explanation">Pembahasan: Tidak mutlak jago mengetik baris kode, tapi analis diwajibkan lihai menerjemahkan kebutuhan klien non-IT ke bahasa nalar skema UML.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">79. Siapa saja yang tergolong ke dalam kelompok Brainware tingkat pengembang/pembangun sistem (System Developers)?</div>
+            <div class="answer">Kunci Jawaban: System Analyst, Software Engineer, Database Architect</div>
+            <p class="explanation">Pembahasan: Trio pencipta kerangka inti aplikasi, arsitek sistemnya, arsitek alur logikanya, serta arsitek wujud tabel databasenya.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">80. Tanggung jawab seorang Database Administrator (DBA) dalam perusahaan adalah...</div>
+            <div class="answer">Kunci Jawaban: Melakukan backup & recovery data, Menjaga keamanan data dari akses ilegal, Optimasi performa query database</div>
+            <p class="explanation">Pembahasan: Penguasa ranah data. Bertanggung jawab jangan sampai tabel rusak/loss dan jika kueri sistem berat akan diatur index ulang.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">81. Peran brainware dalam menjaga keamanan siber (Cybersecurity) organisasi dilakukan oleh...</div>
+            <div class="answer">Kunci Jawaban: Security Analyst, Penetration Tester, Chief Information Security Officer (CISO)</div>
+            <p class="explanation">Pembahasan: Divisi pelindung serangan (Defensive). Mencakup penguji sistem, hingga dewan pengambil kebijakan mutlak infosec organisasi besar.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">82. Etika dan tanggung jawab pengguna komputer (Brainware) yang baik antara lain...</div>
+            <div class="answer">Kunci Jawaban: Tidak menginstal aplikasi bajakan, Menjaga kerahasiaan kata sandi akun, Menghargai hak cipta karya digital</div>
+            <p class="explanation">Pembahasan: Menghindari sengketa pirasi paten intelektual dengan memakai software original demi etika profesional kemanusiaan berjejaring siber.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">83. Tugas utama tim IT Technical Support / Helpdesk di perusahaan adalah...</div>
+            <div class="answer">Kunci Jawaban: Membantu pengguna saat terjadi masalah IT, Menginstal OS dan aplikasi standar kerja, Melakukan troubleshooting perangkat komputer</div>
+            <p class="explanation">Pembahasan: Barisan penjaga garda depan jika tiba-tiba sistem rekan kerja sekantor "ngambek", printer macet, kabel kusut, OS hank error blue screen.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">84. Profesi manakah yang erat kaitannya dengan pengelolaan Big Data dan Kecerdasan Buatan?</div>
+            <div class="answer">Kunci Jawaban: Data Scientist, Machine Learning Engineer, Data Engineer</div>
+            <p class="explanation">Pembahasan: Posisi saintis penguasa volume data statistik gila-gilaan, merekayasanya dalam struktur logaritma prediksi bot atau Artificial Intelligence generatif prediktif masa kini.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">85. Komponen utama agar Brainware dapat bekerja efektif dalam sistem komputer meliputi...</div>
+            <div class="answer">Kunci Jawaban: Pengetahuan (Knowledge), Keterampilan (Skill), Sertifikasi / Pengalaman (Competency)</div>
+            <p class="explanation">Pembahasan: Brainware merujuk pada elemen 'otak' sumber daya manusia, yang diukur dengan modalitas pengetahuan teori, wujud mahir praktik, hingga pengakuan sertifikat legal uji kompetensi.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">86. Siapa saja pengguna komputer yang tergolong dalam kelompok 'Operator'?</div>
+            <div class="answer">Kunci Jawaban: Kasir minimarket menggunakan sistem POS, Petugas Data Entry di bank, Staf Administrasi mengetik surat</div>
+            <p class="explanation">Pembahasan: Mereka tidak membuat arsitektur aplikasi (non-IT Developer), cukup memasukkan transaksi pada "end point UI/UX" program instan penunjang profesi utamanya.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">87. Aktivitas jahat terkait brainware yang melanggar hukum siber (Cybercrime) adalah...</div>
+            <div class="answer">Kunci Jawaban: Phishing data nasabah, Carding / Pencurian kartu kredit, Hacking ilegal pada server</div>
+            <p class="explanation">Pembahasan: Memancing link nipu curi akun user pass, penipuan e-commerce bayar bodong dengan kartu digital bajakan, hingga infiltrasi penetrasi DDoS jahat yang merusak data properti server.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">88. Manakah komponen utama yang menyusun Arsitektur CPU Von Neumann?</div>
+            <div class="answer">Kunci Jawaban: Control Unit (CU), Arithmetic Logic Unit (ALU), Unit Memori (Memory Unit), Input/Output Unit</div>
+            <p class="explanation">Pembahasan: 4 fondasi utama konsep klasik mesin von Neumann modern; pengatur sentral (CU), kalkulator aljabar (ALU), tabung ingatan memori, serta alur keluar-masuk perifer I/O terminal.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">89. Manakah jenis register di dalam CPU yang berfungsi membantu aliran data instruksi?</div>
+            <div class="answer">Kunci Jawaban: Program Counter (PC), Instruction Register (IR), Accumulator (ACC), Memory Address Register (MAR)</div>
+            <p class="explanation">Pembahasan: Tempat sandar ekstra kecil memori temporer, ada yang fokus mengingat barisan urut baris proses (PC), ada yang membawa wadah operand murni (ACC).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">90. Fungsi dari Control Unit (CU) di dalam CPU antara lain adalah...</div>
+            <div class="answer">Kunci Jawaban: Mengambil instruksi dari memori utama (Fetch), Menerjemahkan kode instruksi (Decode), Mengatur sinyal kendali bus</div>
+            <p class="explanation">Pembahasan: Ia layaknya pusat komando Polisi Lalu Lintas, cuma menginstruksikan arahan jalan bagi bus (Address/Data) tanpa turut ambil pusing menghitung tambah-kurang rumusnya.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">91. Ciri-ciri utama dari Cache Memory pada CPU adalah...</div>
+            <div class="answer">Kunci Jawaban: Kecepatan akses jauh lebih cepat dibanding RAM, Kapasitas simpan relatif kecil, Letaknya sangat dekat/di dalam inti CPU</div>
+            <p class="explanation">Pembahasan: Semacam 'kantong saku kemeja' pak mandor prosesor, sangat cepat dieksekusi diambil namun daya tampung Mega Bytenya super mini dan harganya paling mahal materialnya.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">92. Manakah jenis bus internal yang menghubungkan CPU dengan komponen luar?</div>
+            <div class="answer">Kunci Jawaban: Data Bus, Address Bus, Control Bus</div>
+            <p class="explanation">Pembahasan: Trio pipa sirkuit; pembawa lintasan kargo bit mentah (Data), penentu sasaran tembak peta laci memori (Address), pemegang komando instruksi interrupt kendali sinyal (Control).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">93. Operasi dasar apa saja yang dilakukan oleh Arithmetic Logic Unit (ALU)?</div>
+            <div class="answer">Kunci Jawaban: Operasi Aritmatika (+, -, *, /), Operasi Logika (AND, OR, NOT), Operasi Perbandingan (==, >, <)</div>
+            <p class="explanation">Pembahasan: ALU fokus mengekstrak bit listrik yang bermuara pada kalkulasi penambahan biner logika, membandingkan angka Boolean, dan operasi logika gerbang matematis kaku.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">94. Faktor-faktor yang mempengaruhi kinerja dan kecepatan eksekusi sebuah CPU adalah...</div>
+            <div class="answer">Kunci Jawaban: Clock Speed (Frekuensi GHz), Jumlah Core / Inti Prosesor, Ukuran Kapasitas Cache Memory, Arsitektur Kumpulan Instruksi (RISC/CISC)</div>
+            <p class="explanation">Pembahasan: Semakin ngebut sinyal gelombang clock (GHz), besar tabung cache dalam mb, atau rute arsitektur (ARM RISC nan gesit), semuanya berkolaborasi pada patokan tolok ukur 'Gahar' CPU itu.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">95. Tingkatan Cache Memory yang umum berada dalam arsitektur prosesor modern meliputi...</div>
+            <div class="answer">Kunci Jawaban: L1 Cache, L2 Cache, L3 Cache</div>
+            <p class="explanation">Pembahasan: Lapisan Hierarki 'Level'. L1 super kecil namun paling gila kecepatannya memandu inti, dilanjutkan L2 per-core buffer, baru kemudian buffer L3 besar patungan memori komunal shared unit CPU barengan.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">96. Perbedaan utama antara arsitektur RISC dan CISC adalah...</div>
+            <div class="answer">Kunci Jawaban: RISC memiliki instruksi sederhana dan cepat, CISC memiliki instruksi kompleks yang beragam, RISC mengandalkan banyak register, CISC menggunakan format instruksi berukuran bervariasi</div>
+            <p class="explanation">Pembahasan: RISC (Reduced) berorientasi memecah beban baris panjang menjadi ringan-ringan kecil eksekusi mutlak cepat (Smartphone/Apple M Series), beda dengan CISC (Complex) yang berat merangkap segalanya via memory panjang (Desktop intel/AMD PC).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">97. Sebutkan tahapan dalam Siklus Instruksi (Instruction Cycle) CPU!</div>
+            <div class="answer">Kunci Jawaban: Fetch (Mengambil instruksi), Decode (Menerjemahkan instruksi), Execute (Mengeksekusi instruksi), Store (Menyimpan hasil)</div>
+            <p class="explanation">Pembahasan: Putaran abadi jutaan kali per detik CPU. Menarik order dari RAM, memecah kode hex, jalankan tugas operasi oleh ALU, lalu write-back dikembalikan output ke register final memori utama.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">98. Manakah keuntungan dari teknologi Multi-Core pada CPU modern?</div>
+            <div class="answer">Kunci Jawaban: Meningkatkan kemampuan Multitasking, Memungkinkan eksekusi paralel secara simultan, Efisiensi daya kerja beban terbagi</div>
+            <p class="explanation">Pembahasan: Layaknya punya 4-8 tenaga kasir (pekerja) di satu toko (chip CPU), masing-masing orang dapat beroperasi sendiri merampungkan pelanggannya terhindar dari hang (Multithreading Paralel).</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">99. Sinyal yang dikirimkan oleh peranti I/O ke CPU untuk meminta perhatian eksekusi dinamakan...</div>
+            <div class="answer">Kunci Jawaban: Interrupt Request (IRQ), System Call, Control Signal</div>
+            <p class="explanation">Pembahasan: Interupsi atau 'Interrupt' ini bersifat merajuk; ketika mouse diklik gerak atau USB HDD ditancap cabut tiba-tiba, komponen I/O ini memaksa nyela antrean CPU untuk diurusi seketika menyingkirkan program normal.</p>
+        </div>
+        <div class="qa-block">
+            <div class="question">100. Manakah pernyataan yang benar mengenai konsep Pipelining pada CPU?</div>
+            <div class="answer">Kunci Jawaban: Membagi eksekusi instruksi menjadi beberapa tahap, Tiap tahap dikerjakan bersamaan untuk instruksi berbeda, Meningkatkan throughput pemrosesan instruksi</div>
+            <p class="explanation">Pembahasan: Sistem aliran pabrik industri canggih. Bagian CU men-Decode file nomor B disaat bersamaan gerak ALU nge-Execute memukul palu data nomor A tanpa harus idle terbuang waktunya nunggu order.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // ======= PENGATURAN KODE PIN =======
+        const PIN_GURU = "GURUSMKHEBAT"; 
+        
+        function verifyPin() {
+            const input = document.getElementById('pin-input').value;
+            const errorMsg = document.getElementById('error-msg');
+            
+            if (input === PIN_GURU) {
+                document.getElementById('security-overlay').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('pin-input').value = '';
+            }
+        }
+
+        document.getElementById('pin-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                verifyPin();
+            }
+        });
+    </script>
+</body>
+</html>
